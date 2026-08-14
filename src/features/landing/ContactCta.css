@@ -1,0 +1,38 @@
+.cta {
+  padding-block: var(--space-9);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+}
+
+.cta__inner {
+  text-align: center;
+  max-width: 640px;
+}
+
+.cta__title {
+  color: #fff;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: var(--space-3);
+}
+
+.cta__text {
+  font-size: 1.0625rem;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: var(--space-6);
+}
+
+.cta__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.cta__actions .btn--ghost {
+  color: #fff;
+}
+
+.cta__actions .btn--ghost:hover {
+  color: #fff;
+  text-decoration: underline;
+}
