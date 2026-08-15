@@ -45,7 +45,7 @@
 ```css
 :root {
   --color-primary: #D01126;
-  --color-primary-dark: #A40E1F;
+  --color-primary-dark: #aa091c;
   --color-primary-tint: #FBEDEF;
   --color-text: #1F2430;
   --color-text-secondary: #5B6472;
@@ -54,7 +54,7 @@
   --color-surface-alt: #F6F7F9;
   --color-footer: #434343;
   --color-success: #16A34A;
-  --color-warning: #D97706;
+  --color-warning: #d67011;
   --color-danger: #DC2626;
 }
 ```
