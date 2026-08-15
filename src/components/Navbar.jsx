@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import useHideOnScroll from '../hooks/useHideOnScroll'
 import './Navbar.css'
 
 const LINKS = [
@@ -11,12 +12,17 @@ const LINKS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const hidden = useHideOnScroll()
 
   return (
-    <header className="navbar">
+    <header className={`navbar ${hidden ? 'navbar--hidden' : ''}`}>
       <div className="container navbar__inner">
         <Link to="/" className="navbar__brand" onClick={() => setOpen(false)}>
-          Fujitec
+          <img
+            src="/logo_trasparente.com.png"
+            alt="Fujitec Venezuela"
+            className="navbar__logo"
+          />
         </Link>
 
         <button
@@ -44,9 +50,6 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
-          <Link to="/cotizar" className="btn btn--primary btn--sm navbar__cta" onClick={() => setOpen(false)}>
-            Solicitar cotización
-          </Link>
         </nav>
       </div>
     </header>

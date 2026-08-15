@@ -7,7 +7,11 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__grid">
         <div className="footer__brand">
-          <span className="footer__brand-text">Fujitec</span>
+          <img
+            src="/logo_trasparente.com.png"
+            alt="Fujitec Venezuela"
+            className="footer__logo"
+          />
           <p className="footer__tagline">
             Soluciones de transporte vertical en Venezuela desde 1968.
           </p>

@@ -11,13 +11,11 @@
   padding-block: var(--space-8);
 }
 
-.footer__brand-text {
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: #fff;
+.footer__logo {
+  height: 48px;
+  width: auto;
   margin-bottom: var(--space-3);
-  display: inline-block;
+  display: block;
 }
 
 .footer__tagline {
