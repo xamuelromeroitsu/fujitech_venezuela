@@ -1,44 +1,21 @@
-/**
- * Cliente Supabase (lazy + guardado).
- *
- * Sin VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY la app funciona en modo
- * demostración: getSupabase() devuelve null y las llamadas de persistencia
- * se omiten con un log. Esto permite desplegar la landing sin backend y
- * activar la persistencia más tarde sin tocar componentes.
- *
- * NUNCA uses la service key aquí (solo la anon/public key).
- */
 import { createClient } from '@supabase/supabase-js'
 
+/**
+ * Cliente Supabase opcional.
+ * - Configura las variables VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY para activarlo.
+ * - Sin ellas entra en MODO DEMO: los insert se registran en consola y no fallan.
+ */
 const url = import.meta.env.VITE_SUPABASE_URL
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-let client = null
+export const supabase = url && anonKey ? createClient(url, anonKey) : null
 
-export function isSupabaseConfigured() {
-  return Boolean(url && anonKey)
-}
-
-export function getSupabase() {
-  if (!isSupabaseConfigured()) {
-    return null
-  }
-  if (!client) {
-    client = createClient(url, anonKey)
-  }
-  return client
-}
-
-/**
- * Inserta una fila si hay Supabase configurado. Devuelve { ok, data, error }.
- * En modo demo devuelve { ok: true, data: null, error: null, demo: true }.
- */
 export async function insertRow(table, payload) {
-  const sb = getSupabase()
-  if (!sb) {
-    console.info(`[demo] insertar en "${table}" (Supabase no configurado)`)
-    return { ok: true, data: null, error: null, demo: true }
+  if (!supabase) {
+    console.info(`[demo] insertRow("${table}")`, payload)
+    return { demo: true }
   }
-  const { data, error } = await sb.from(table).insert(payload).select()
-  return { ok: !error, data, error }
+  const { data, error } = await supabase.from(table).insert(payload).select()
+  if (error) throw new Error(error.message)
+  return { data, demo: false }
 }
