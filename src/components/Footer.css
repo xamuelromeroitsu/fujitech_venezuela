@@ -45,6 +45,10 @@
   color: #d7dbe2;
 }
 
+.footer__address {
+  line-height: 1.55;
+}
+
 .footer__list a:hover {
   color: #fff;
 }

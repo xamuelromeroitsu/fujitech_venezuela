@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom'
+import { WHATSAPP_CONFIG, buildWhatsAppLink } from '../features/whatsapp/whatsapp.config'
 import './Footer.css'
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const waLink = buildWhatsAppLink(
+    WHATSAPP_CONFIG.phone,
+    WHATSAPP_CONFIG.countryCode,
+    WHATSAPP_CONFIG.defaultMessage,
+  )
   return (
     <footer className="footer">
       <div className="container footer__grid">
@@ -39,8 +45,12 @@ export default function Footer() {
         <div className="footer__col">
           <h4 className="footer__title">Contacto</h4>
           <ul className="footer__list">
-            <li>Caracas, Venezuela</li>
-            <li><a href="tel:+584143254458">+58 414-3254458</a></li>
+            <li className="footer__address">
+              Calle 8 con calle 6, Edificio Luindos, PB, local 1, La Urbina, Caracas - Venezuela
+            </li>
+            <li>
+              <a href={waLink} target="_blank" rel="noopener noreferrer">+58 414-3254458</a>
+            </li>
             <li>ventas@fujitec.com.ve</li>
           </ul>
         </div>
