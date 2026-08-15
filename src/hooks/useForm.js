@@ -13,6 +13,17 @@ import { useState } from 'react'
  *     },
  *     onSubmit: async (values) => { ... },
  *   })
+ *
+ * NOTAS TÉCNICAS (para futuros cambios):
+ * - `handleChange` usa `e.target.name` como clave; el campo debe tener un `name`.
+ * - Soporta checkboxes: si `type === 'checkbox'` guarda `checked` en vez de `value`.
+ * - Al editar un campo se limpia su error automáticamente (validación en vivo).
+ * - `handleSubmit` devuelve `{ ok, errors?, values? }`; valida ANTES de llamar a `onSubmit`.
+ * - Si `onSubmit` lanza error, lo captura y lo pone en `errors._form` (no rompe la app).
+ * - `setValue(name, valor)` sirve para campos controlados por estado (selects, autocomplete).
+ * - `reset()` restaura los valores iniciales y limpia todos los errores.
+ * - `isSubmitting` se activa durante el `await onSubmit` para deshabilitar botones.
+ * - No dependes de ninguna librería externa: es solo useState.
  */
 export function useForm({ initialValues = {}, validate = () => ({}), onSubmit }) {
   const [values, setValues] = useState(initialValues)
