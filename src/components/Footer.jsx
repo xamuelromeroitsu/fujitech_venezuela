@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import fujitecLogo from '../assets/logos/fujitec-logo-hd.png'
 import './Footer.css'
 
 export default function Footer() {
@@ -8,7 +7,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__grid">
         <div className="footer__brand">
-          <img src={fujitecLogo} alt="Fujitec Venezuela" className="footer__logo" />
+          <span className="footer__brand-text">Fujitec</span>
           <p className="footer__tagline">
             Soluciones de transporte vertical en Venezuela desde 1968.
           </p>
@@ -37,7 +36,7 @@ export default function Footer() {
           <h4 className="footer__title">Contacto</h4>
           <ul className="footer__list">
             <li>Caracas, Venezuela</li>
-            <li>+58 (212) 000-0000</li>
+            <li><a href="tel:+584143254458">+58 414-3254458</a></li>
             <li>ventas@fujitec.com.ve</li>
           </ul>
         </div>

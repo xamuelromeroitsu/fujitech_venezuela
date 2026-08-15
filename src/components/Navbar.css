@@ -15,9 +15,16 @@
   gap: var(--space-4);
 }
 
-.navbar__logo {
-  height: 40px;
-  width: auto;
+.navbar__brand {
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.navbar__brand:hover {
+  color: var(--color-primary);
 }
 
 .navbar__menu {
@@ -45,24 +52,53 @@
 
 .navbar__toggle {
   display: none;
-  flex-direction: column;
-  gap: 5px;
+  position: relative;
+  width: 24px;
+  height: 18px;
   background: none;
   border: none;
-  padding: var(--space-2);
+  padding: 0;
+  cursor: pointer;
 }
 
 .navbar__toggle-bar {
+  position: absolute;
+  left: 0;
   width: 24px;
-  height: 2.5px;
+  height: 2px;
   background-color: var(--color-text);
   border-radius: 2px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.2s ease;
+}
+
+.navbar__toggle-bar:nth-child(1) {
+  top: 0;
+}
+
+.navbar__toggle-bar:nth-child(2) {
+  top: 8px;
+}
+
+.navbar__toggle-bar:nth-child(3) {
+  top: 16px;
+}
+
+/* Abierto: las líneas se transforman en una ✕ (JS cambia la clase) */
+.navbar__toggle--active .navbar__toggle-bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.navbar__toggle--active .navbar__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar__toggle--active .navbar__toggle-bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
 @media (max-width: 900px) {
   .navbar__toggle {
-    display: flex;
+    display: block;
   }
 
   .navbar__menu {

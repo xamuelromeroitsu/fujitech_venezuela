@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import fujitecLogo from '../assets/logos/fujitec-logo.png'
 import './Navbar.css'
 
 const LINKS = [
@@ -17,15 +16,15 @@ export default function Navbar() {
     <header className="navbar">
       <div className="container navbar__inner">
         <Link to="/" className="navbar__brand" onClick={() => setOpen(false)}>
-          <img src={fujitecLogo} alt="Fujitec Venezuela" className="navbar__logo" />
+          Fujitec
         </Link>
 
         <button
           type="button"
-          className="navbar__toggle"
+          className={`navbar__toggle ${open ? 'navbar__toggle--active' : ''}`}
           aria-expanded={open}
           aria-controls="navbar-menu"
-          aria-label="Abrir menú"
+          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
           onClick={() => setOpen((v) => !v)}
         >
           <span className="navbar__toggle-bar" />
