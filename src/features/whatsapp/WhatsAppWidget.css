@@ -1,0 +1,413 @@
+.wa {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 90;
+  font-family: var(--font-sans);
+}
+
+/* ---------- Botón flotante (plano, estilo app) ---------- */
+.wa__fab {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  cursor: pointer;
+  background-color: #128c7e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.2s ease;
+  animation: wa-bounce 2s infinite ease-in-out;
+}
+
+.wa__fab:hover {
+  background-color: #0d7266;
+}
+
+.wa__fab:active {
+  background-color: #0d7266;
+}
+
+.wa__fab--active {
+  background-color: #0d7266;
+}
+
+.wa__fab--active:hover {
+  background-color: #0d7266;
+}
+
+/* Contenedor de íconos: mantiene el ritmo vertical (efecto ascensor) sincronizado */
+.wa__fab-icons {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  animation: wa-elevator 2s infinite ease-in-out;
+}
+
+/* Cruz ↔ WhatsApp: cruce limpio y sincronizado al abrir/cerrar */
+.wa__icon {
+  grid-area: 1 / 1;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wa__icon--wa {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.wa__icon--close {
+  opacity: 0;
+  transform: scale(0.4) rotate(-90deg);
+}
+
+.wa__fab--active .wa__icon--wa {
+  opacity: 0;
+  transform: scale(0.4) rotate(90deg);
+}
+
+.wa__fab--active .wa__icon--close {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* Rebote del botón: actúa como pelota (sube, se estira, aplasta al caer) */
+@keyframes wa-bounce {
+  0% {
+    transform: translateY(0) scale(1, 1);
+  }
+  12% {
+    transform: translateY(-30px) scale(1.05, 0.93); /* sube y se estira */
+  }
+  24% {
+    transform: translateY(0) scale(0.9, 1.15); /* cae y se aplasta */
+  }
+  36% {
+    transform: translateY(-12px) scale(1.03, 0.96); /* rebote menor */
+  }
+  48% {
+    transform: translateY(0) scale(0.95, 1.08); /* segundo aterrizaje */
+  }
+  60%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+/* Ondas de radio que salen al rebotar (sincronizadas con el ciclo de 7 s) */
+.wa__fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  z-index: 0;
+  background-color: rgba(18, 140, 126, 0.45);
+  animation: wa-radio 2s infinite ease-out;
+}
+
+.wa__fab--active::before {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes wa-radio {
+  0%,
+  22% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  24% {
+    transform: scale(0.8);
+    opacity: 0.55; /* onda 1: justo en el primer aterrizaje */
+  }
+  46% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  48% {
+    transform: scale(0.8);
+    opacity: 0.55; /* onda 2: justo en el segundo aterrizaje */
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Movimiento vertical del ícono: sigue a la pelota, mismo ritmo, sin pausa */
+@keyframes wa-elevator {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  12% {
+    transform: translateY(-16px); /* sube con la pelota */
+  }
+  24% {
+    transform: translateY(0); /* aterriza con la pelota */
+  }
+  36% {
+    transform: translateY(-7px); /* rebote menor con la pelota */
+  }
+  48% {
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Panel de chat (réplica app WhatsApp) ---------- */
+.wa__panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 16px);
+  width: min(340px, calc(100vw - 40px));
+  background-color: var(--color-surface);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.14);
+  transform-origin: bottom right;
+  animation: wa-panel-in 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wa__panel--closing {
+  animation: wa-panel-out 0.32s ease-in forwards;
+  pointer-events: none;
+}
+
+/* Entrada: crece desde el botón (esquina inferior derecha) */
+@keyframes wa-panel-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.1);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Salida: se encoge hacia el botón (inversa) */
+@keyframes wa-panel-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.1);
+  }
+}
+
+/* Cabecera verde de WhatsApp (#075E54) */
+.wa__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: #075e54;
+}
+
+.wa__avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: var(--color-primary);
+  background-color: #fff;
+}
+
+.wa__header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wa__name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+}
+
+.wa__status {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wa__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #80ffb8;
+}
+
+.wa__close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 0.8125rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.wa__close:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Cuerpo con fondo del chat (imagen de la app) */
+.wa__body {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 210px;
+  background-color: #e5ddd5;
+  background-image: url('./assets/fondo_de_wassap.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Burbuja entrante (blanca, plana, estilo app) */
+.wa__bubble {
+  position: relative;
+  align-self: flex-start;
+  max-width: 88%;
+  padding: 8px 10px 6px 12px;
+  border-radius: 8px;
+  border-top-left-radius: 2px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+}
+
+.wa__bubble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid #fff;
+  border-left: 8px solid transparent;
+}
+
+.wa__bubble-text {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #111b21;
+}
+
+.wa__bubble-time {
+  display: block;
+  text-align: right;
+  font-size: 0.6875rem;
+  color: rgba(17, 27, 33, 0.55);
+  margin-top: 2px;
+}
+
+/* Indicador "escribiendo…" (3 puntitos animados) */
+.wa__typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 14px;
+}
+
+.wa__typing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: rgba(17, 27, 33, 0.4);
+  animation: wa-bounce 1.2s infinite ease-in-out;
+}
+
+.wa__typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.wa__typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes wa-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* Pie del chat con el botón fijo abajo */
+.wa__footer {
+  padding: 12px 16px;
+  background-color: var(--color-surface);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* CTA verde plano estilo WhatsApp (sin movimiento) */
+.wa__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #fff;
+  text-decoration: none;
+  background-color: #128c7e;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.15s ease;
+}
+
+.wa__cta:hover {
+  color: #fff;
+  background-color: #0d7266;
+}
+
+.wa__hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(17, 27, 33, 0.6);
+}
+
+/* ---------- Accesibilidad ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .wa__panel,
+  .wa__panel--closing,
+  .wa__typing-dot,
+  .wa__fab,
+  .wa__fab::before,
+  .wa__fab-icons,
+  .wa__icon {
+    animation: none;
+    transition: none;
+  }
+}
