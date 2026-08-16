@@ -30,6 +30,7 @@
   height: 40px;
   width: auto;
   display: block;
+  padding-top: 4px;
 }
 
 .navbar__menu {
