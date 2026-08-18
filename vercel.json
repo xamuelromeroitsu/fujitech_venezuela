@@ -1,6 +1,5 @@
 {
-  "//": "Configuración de reescritura de rutas para Single Page Applications (SPA) en Vercel.",
-  "// ": "Redirige todas las solicitudes al index.html para que la librería de cliente (ej. React Router) maneje el enrutamiento y no genere errores 404 al recargar.",
+  
   "rewrites": [
     {
       "source": "/(.*)",
@@ -8,3 +7,5 @@
     }
   ]
 }
+
+
