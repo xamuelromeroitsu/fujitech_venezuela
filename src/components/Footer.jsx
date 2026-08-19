@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="container footer__grid">
         <div className="footer__brand">
           <img
-            src="/fujitec_now_logo.png"
+            src="/images/company/fujitec_now_logo.png"
             alt="Fujitec Venezuela"
             className="footer__logo"
           />

@@ -19,7 +19,7 @@ export default function Navbar() {
       <div className="container navbar__inner">
         <Link to="/" className="navbar__brand" onClick={() => setOpen(false)}>
           <img
-            src="/logo_trasparente.com.png"
+            src="/images/company/logo_trasparente.com.png"
             alt="Fujitec Venezuela"
             className="navbar__logo"
           />
