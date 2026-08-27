@@ -48,7 +48,7 @@ function validate(values) {
 export default function CotizadorForm() {
   const [paso, setPaso] = useState(0)
   const [enviado, setEnviado] = useState(false)
-  const { values, errors, handleChange, handleSubmit, isSubmitting, setValue } = useForm({
+  const { values, errors, setErrors, handleChange, handleSubmit, isSubmitting, setValue } = useForm({
     initialValues: INICIAL,
     validate,
     onSubmit: async (v) => {
