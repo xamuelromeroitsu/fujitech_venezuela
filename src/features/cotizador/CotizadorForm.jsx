@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
 import { insertRow } from '../../lib/supabaseClient'
+// Reglas de validación centralizadas — editar en validators.js
+import { rules } from '../../lib/validators'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import './CotizadorForm.css'
@@ -33,9 +35,12 @@ const INICIAL = {
 
 function validate(values) {
   const errors = {}
-  if (!values.nombre.trim()) errors.nombre = 'Ingresa tu nombre'
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) errors.email = 'Email inválido'
-  if (!values.telefono.trim()) errors.telefono = 'Ingresa un teléfono'
+  const n = rules.nombre(values.nombre); if (n) errors.nombre = n
+  const e = rules.email(values.email); if (e) errors.email = e
+  const t = rules.telefono(values.telefono); if (t) errors.telefono = t
+  const ed = rules.edificio(values.edificio); if (ed) errors.edificio = ed
+  // Tipo inmueble requerido en paso 1 — si agregas otro campo de paso 1, valida aquí
+  const ti = rules.tipoInmueble(values.tipoInmueble); if (ti) errors.tipoInmueble = ti
   if (values.paradas && Number(values.paradas) < 1) errors.paradas = 'Mínimo 1 parada'
   return errors
 }
@@ -62,15 +67,18 @@ export default function CotizadorForm() {
     },
   })
 
+  // Valida solo los campos del paso actual antes de avanzar
+  // Si agregas campo nuevo, agrégalo al array 'relevant' del paso correspondiente
   async function handleNext() {
     const partial = { ...values }
     const errs = validate(partial)
     const relevant = paso === 0
-      ? ['nombre', 'email', 'telefono']
+      ? ['nombre', 'email', 'telefono', 'edificio']
       : paso === 1 ? ['tipoInmueble', 'servicio'] : []
     const next = {}
     relevant.forEach((k) => { if (errs[k]) next[k] = errs[k] })
-    if (Object.keys(next).length > 0) return
+    // Muestra errores en pantalla y bloquea avance
+    if (Object.keys(next).length > 0) { setErrors(next); return }
     setPaso((p) => Math.min(p + 1, PASOS.length - 1))
   }
 
@@ -99,10 +107,11 @@ export default function CotizadorForm() {
 
       {paso === 0 && (
         <div className="cotizador__step">
-          <Input label="Nombre completo" name="nombre" value={values.nombre} onChange={handleChange} error={errors.nombre} required />
+          {/* Doble validación: HTML5 (pattern, maxLength) + JS (rules de validators.js) */}
+          <Input label="Nombre completo" name="nombre" value={values.nombre} onChange={handleChange} error={errors.nombre} pattern="[^\d]*" required />
           <Input label="Email" name="email" type="email" value={values.email} onChange={handleChange} error={errors.email} required />
-          <Input label="Teléfono / WhatsApp" name="telefono" type="tel" value={values.telefono} onChange={handleChange} error={errors.telefono} required />
-          <Input label="Nombre del edificio o comunidad" name="edificio" value={values.edificio} onChange={handleChange} />
+          <Input label="Teléfono / WhatsApp" name="telefono" type="tel" maxLength={16} inputMode="numeric" pattern="[+\d\s-]*" value={values.telefono} onChange={handleChange} error={errors.telefono} required />
+          <Input label="Nombre del edificio o comunidad" name="edificio" maxLength={50} value={values.edificio} onChange={handleChange} error={errors.edificio} />
         </div>
       )}
 
