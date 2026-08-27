@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { WHATSAPP_CONFIG, buildWhatsAppLink } from '../features/whatsapp/whatsapp.config'
+import { WHATSAPP_CONFIG, buildWhatsAppLink } from '../../features/whatsapp/whatsapp.config'
 import './Footer.css'
 
 export default function Footer() {

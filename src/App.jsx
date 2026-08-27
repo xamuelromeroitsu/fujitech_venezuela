@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { BrowserRouter, useLocation } from 'react-router-dom'
 import AppRoutes from './routes/AppRoutes'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 
 /**
  * ScrollToTop — Sube al inicio de la página al navegar entre rutas.
