@@ -5,6 +5,10 @@ import { insertRow } from '../../lib/supabaseClient'
 import { rules } from '../../lib/validators'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
+import FormSuccess from '../../components/form/FormSuccess'
+import ChipGroup from '../../components/form/ChipGroup'
+import PersonalDataFields from '../../components/form/PersonalDataFields'
+import FormError from '../../components/form/FormError'
 import './CotizadorForm.css'
 
 const PASOS = [
@@ -84,14 +88,13 @@ export default function CotizadorForm() {
 
   if (enviado) {
     return (
-      <div className="cotizador__success" role="status">
-        <p className="cotizador__success-icon">✓</p>
-        <h3>Solicitud recibida</h3>
-        <p>Gracias, {values.nombre}. Un asesor Fujitec te contactará en menos de 24 horas hábiles.</p>
-        <Button variant="secondary" onClick={() => { setEnviado(false); setPaso(0) }}>
-          Nueva solicitud
-        </Button>
-      </div>
+      <FormSuccess
+        nombre={values.nombre}
+        titulo="Solicitud recibida"
+        mensaje="Un asesor Fujitec te contactará en menos de 24 horas hábiles."
+        textoBoton="Nueva solicitud"
+        onReset={() => { setEnviado(false); setPaso(0) }}
+      />
     )
   }
 
@@ -107,46 +110,15 @@ export default function CotizadorForm() {
 
       {paso === 0 && (
         <div className="cotizador__step">
-          {/* Doble validación: HTML5 (pattern, maxLength) + JS (rules de validators.js) */}
-          <Input label="Nombre completo" name="nombre" value={values.nombre} onChange={handleChange} error={errors.nombre} pattern="[^\d]*" required />
-          <Input label="Email" name="email" type="email" value={values.email} onChange={handleChange} error={errors.email} required />
-          <Input label="Teléfono / WhatsApp" name="telefono" type="tel" maxLength={16} inputMode="numeric" pattern="[+\d\s-]*" value={values.telefono} onChange={handleChange} error={errors.telefono} required />
+          <PersonalDataFields values={values} errors={errors} onChange={handleChange} />
           <Input label="Nombre del edificio o comunidad" name="edificio" maxLength={50} value={values.edificio} onChange={handleChange} error={errors.edificio} />
         </div>
       )}
 
       {paso === 1 && (
         <div className="cotizador__step">
-          <div className="field">
-            <span className="field__label">Tipo de inmueble</span>
-            <div className="cotizador__chips">
-              {TIPOS_INMUEBLE.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  className={`cotizador__chip ${values.tipoInmueble === t ? 'cotizador__chip--active' : ''}`}
-                  onClick={() => setValue('tipoInmueble', t)}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="field">
-            <span className="field__label">Servicio que necesitas</span>
-            <div className="cotizador__chips">
-              {SERVICIOS.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  className={`cotizador__chip ${values.servicio === s ? 'cotizador__chip--active' : ''}`}
-                  onClick={() => setValue('servicio', s)}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
+          <ChipGroup label="Tipo de inmueble" options={TIPOS_INMUEBLE} value={values.tipoInmueble} onChange={(v) => setValue('tipoInmueble', v)} error={errors.tipoInmueble} />
+          <ChipGroup label="Servicio que necesitas" options={SERVICIOS} value={values.servicio} onChange={(v) => setValue('servicio', v)} />
           <Input
             label="Número de paradas / pisos"
             name="paradas"
@@ -186,7 +158,7 @@ export default function CotizadorForm() {
             onChange={handleChange}
             hint="Ej.: cuántos ascensores tiene el edificio, antigüedad, marca actual..."
           />
-          {errors._form && <p className="field__error">{errors._form}</p>}
+          <FormError error={errors._form} />
         </div>
       )}
 
