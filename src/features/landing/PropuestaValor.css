@@ -1,9 +1,16 @@
 .propuesta {
   padding-block: var(--space-9);
+  background-color: var(--color-surface);
 }
 
 .propuesta__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-5);
+}
+
+@media (max-width: 900px) {
+  .propuesta__grid {
+    grid-template-columns: 1fr;
+  }
 }

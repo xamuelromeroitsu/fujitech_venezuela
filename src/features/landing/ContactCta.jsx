@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
+import { IconArrowRight, IconExternalLink } from '../../components/icons'
 import './ContactCta.css'
 
 export default function ContactCta() {
   return (
-    <section className="cta" id="contacto">
+    <section className="cta" id="contacto" data-reveal>
       <div className="container cta__inner">
         <h2 className="cta__title">¿Listo para mover tu comunidad o proyecto?</h2>
         <p className="cta__text">
@@ -11,8 +12,14 @@ export default function ContactCta() {
           con una propuesta formal.
         </p>
         <div className="cta__actions">
-          <Link to="/cotizar" className="btn btn--primary btn--lg">Cotizar ahora</Link>
-          <Link to="/empleo" className="btn btn--ghost btn--lg">¿Eres técnico? Únete</Link>
+          <Link to="/cotizar" className="btn btn--primary btn--lg">
+            Cotizar ahora
+            <IconArrowRight size={20} strokeWidth={2} />
+          </Link>
+          <Link to="/empleo" className="btn btn--ghost btn--lg">
+            ¿Eres técnico? Únete
+            <IconExternalLink size={18} strokeWidth={2} />
+          </Link>
         </div>
       </div>
     </section>

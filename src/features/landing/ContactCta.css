@@ -1,24 +1,30 @@
 .cta {
   padding-block: var(--space-9);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  color: #fff;
+  background-color: var(--color-ink);
+  color: var(--color-surface);
 }
 
 .cta__inner {
   text-align: center;
   max-width: 640px;
+  margin-inline: auto;
 }
 
 .cta__title {
-  color: #fff;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-surface);
   margin-bottom: var(--space-3);
+  line-height: 1.2;
 }
 
 .cta__text {
   font-size: 1.0625rem;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--color-footer-muted);
   margin-bottom: var(--space-6);
+  line-height: 1.6;
 }
 
 .cta__actions {
@@ -29,10 +35,23 @@
 }
 
 .cta__actions .btn--ghost {
-  color: #fff;
+  color: var(--color-footer-text);
+  border: 1.5px solid var(--color-line-strong);
 }
 
 .cta__actions .btn--ghost:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.cta__actions .btn--primary {
+  background-color: var(--color-primary);
   color: #fff;
-  text-decoration: underline;
+}
+
+.cta__actions .btn--primary:hover {
+  background-color: var(--color-primary-dark);
+  color: #fff;
 }

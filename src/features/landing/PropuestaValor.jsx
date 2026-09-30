@@ -1,25 +1,26 @@
 import SectionHeading from '../../components/ui/SectionHeading'
 import Card from '../../components/ui/Card'
+import { IconWrench, IconShieldCheck, IconDatabase, IconUserCog } from '../../components/icons'
 import './PropuestaValor.css'
 
 const PILARES = [
   {
-    icon: '🛠️',
+    icon: <IconWrench size={32} strokeWidth={1.5} />,
     title: 'Mantenimiento con margen',
     text: 'Contratos de mantenimiento claros, sin cláusulas abusivas y con repuestos homologados.',
   },
   {
-    icon: '🔓',
+    icon: <IconShieldCheck size={32} strokeWidth={1.5} />,
     title: 'Tecnología abierta',
     text: 'Atendemos cualquier marca: sin bloqueos de software ni rehenes de un fabricante.',
   },
   {
-    icon: '⚖️',
+    icon: <IconDatabase size={32} strokeWidth={1.5} />,
     title: 'Presupuestos transparentes',
     text: 'Cotizaciones detalladas que eliminan la opacidad de precios del sector.',
   },
   {
-    icon: '👷',
+    icon: <IconUserCog size={32} strokeWidth={1.5} />,
     title: 'Talento certificado',
     text: 'Técnicos electromecánicos capacitados y respaldados por una multinacional.',
   },
@@ -27,7 +28,7 @@ const PILARES = [
 
 export default function PropuestaValor() {
   return (
-    <section className="propuesta" id="propuesta">
+    <section className="propuesta" id="propuesta" data-reveal>
       <div className="container">
         <SectionHeading
           eyebrow="Nuestra propuesta"
@@ -36,7 +37,13 @@ export default function PropuestaValor() {
         />
         <div className="propuesta__grid">
           {PILARES.map((p) => (
-            <Card key={p.title} icon={p.icon} title={p.title} subtitle={p.text} />
+            <Card
+              key={p.title}
+              variant="lined-top"
+              icon={p.icon}
+              title={p.title}
+              subtitle={p.text}
+            />
           ))}
         </div>
       </div>

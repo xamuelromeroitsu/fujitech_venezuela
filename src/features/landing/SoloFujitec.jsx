@@ -1,33 +1,34 @@
 import SectionHeading from '../../components/ui/SectionHeading'
 import Card from '../../components/ui/Card'
+import { IconShieldCheck, IconDatabase, IconCertifiedUser, IconWrench } from '../../components/icons'
 import './SoloFujitec.css'
 
 const RAZONES = [
   {
-    icon: '🔧',
+    icon: <IconWrench size={32} strokeWidth={1.5} />,
     title: 'Repuestos originales',
     text: 'Solo componentes homologados de fábrica Fujitec. Sin réplicas ni sustitutos.',
   },
   {
-    icon: '📜',
+    icon: <IconShieldCheck size={32} strokeWidth={1.5} />,
     title: 'Garantía real de fábrica',
     text: 'Cada intervención respaldada por la garantía del fabricante a nivel mundial.',
   },
   {
-    icon: '📋',
+    icon: <IconDatabase size={32} strokeWidth={1.5} />,
     title: 'Trazabilidad total',
     text: 'Historial documentado de cada equipo desde su instalación y cada servicio realizado.',
   },
-  {
-    icon: '👷',
-    title: 'Técnicos certificados',
-    text: 'Personal capacitado por la marca, con acceso a especificaciones y manuales originales.',
-  },
+{
+      icon: <IconCertifiedUser size={32} strokeWidth={1.5} />,
+      title: 'Técnicos certificados',
+      text: 'Personal capacitado por la marca, con acceso a especificaciones y manuales originales.',
+    },
 ]
 
 export default function SoloFujitec() {
   return (
-    <section className="solo-fujitec" id="servicio-fujitec">
+    <section className="solo-fujitec" id="servicio-fujitec" data-reveal>
       <div className="container">
         <SectionHeading
           eyebrow="Marca propia"
@@ -36,7 +37,13 @@ export default function SoloFujitec() {
         />
         <div className="solo-fujitec__grid">
           {RAZONES.map((r) => (
-            <Card key={r.title} icon={r.icon} title={r.title} subtitle={r.text} />
+            <Card
+              key={r.title}
+              variant="lined-top"
+              icon={r.icon}
+              title={r.title}
+              subtitle={r.text}
+            />
           ))}
         </div>
         <div className="solo-fujitec__aviso">
