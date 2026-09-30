@@ -24,6 +24,7 @@
 | [Component Library](components/index.md) | Catálogo de 10 componentes UI con API, variants, ejemplos |
 | [Icon System](icons.md) | 18 iconos SVG lineales (stroke 1.5px), guía de uso |
 | [Animation System](animations.md) | Motion tokens, ScrollRevealProvider, SplitText (GSAP), reduced motion |
+| [SEO Positioning](seo-positioning.md) | Posicionamiento central, keyword map, schema, content briefs, tracking plan |
 
 ---
 
@@ -111,7 +112,7 @@
 
 | Versión | Fecha | Cambios Principales |
 |---------|-------|---------------------|
-| 2.0.0 | 2026-09-30 | Rediseño industrial completo: tokens, componentes, landing, páginas internas, animaciones |
+| 2.0.0 | 2026-09-30 | Rediseño industrial completo: tokens, componentes, landing, páginas internas, animaciones, docs completos |
 | 1.0.0 | 2026-08-14 | MVP inicial: landing, cotizador, IPR, empleo, design system v1 |
 
 ---
