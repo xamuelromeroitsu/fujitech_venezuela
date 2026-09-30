@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { insertRow } from '../../lib/supabaseClient'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
+import { IconShieldCheck, IconAlertTriangle, IconClock } from '../../components/icons'
 import './IprChecker.css'
 
 function diasRestantes(fecha) {
@@ -11,9 +12,9 @@ function diasRestantes(fecha) {
 }
 
 function evaluar(dias) {
-  if (dias < 0) return { estado: 'rojo', titulo: 'Inspección vencida', texto: 'Tu equipo tiene la IPR vencida. Solicita una inspección asistida lo antes posible.' }
-  if (dias <= 90) return { estado: 'amarillo', titulo: 'Próximo a vencer', texto: `La inspección vence en ${dias} días. Agenda la revisión con tiempo.` }
-  return { estado: 'verde', titulo: 'Inspección al día', texto: `La IPR está vigente. Vence en ${dias} días.` }
+  if (dias < 0) return { estado: 'rojo', icon: <IconAlertTriangle size={24} strokeWidth={2} color="var(--color-danger)" />, titulo: 'Inspección vencida', texto: 'Tu equipo tiene la IPR vencida. Solicita una inspección asistida lo antes posible.' }
+  if (dias <= 90) return { estado: 'amarillo', icon: <IconClock size={24} strokeWidth={2} color="var(--color-warning)" />, titulo: 'Próximo a vencer', texto: `La inspección vence en ${dias} días. Agenda la revisión con tiempo.` }
+  return { estado: 'verde', icon: <IconShieldCheck size={24} strokeWidth={2} color="var(--color-success)" />, titulo: 'Inspección al día', texto: `La IPR está vigente. Vence en ${dias} días.` }
 }
 
 export default function IprChecker() {
@@ -52,12 +53,15 @@ export default function IprChecker() {
       </form>
 
       {resultado && (
-        <div className={`ipr__resultado ipr__resultado--${resultado.estado}`} role="status">
-          <p className="ipr__titulo">{resultado.titulo}</p>
-          <p className="ipr__texto">{resultado.texto}</p>
-          <Button as="a" href="/cotizar" variant="secondary" className="ipr__cta">
-            Solicitar inspección técnica asistida
-          </Button>
+        <div className={`ipr__resultado ipr__resultado--${resultado.estado}`} role="status" data-reveal>
+          <div className="ipr__resultado-icon">{resultado.icon}</div>
+          <div className="ipr__resultado-content">
+            <p className="ipr__titulo">{resultado.titulo}</p>
+            <p className="ipr__texto">{resultado.texto}</p>
+            <Button as="a" href="/cotizar" variant="outline" className="ipr__cta">
+              Solicitar inspección técnica asistida
+            </Button>
+          </div>
         </div>
       )}
 

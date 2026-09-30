@@ -1,11 +1,4 @@
 .empleo {
-  max-width: 640px;
-  margin-inline: auto;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
@@ -23,10 +16,113 @@
   }
 }
 
-.empleo__file {
-  padding: var(--space-3);
-  border: 1.5px dashed var(--color-border);
-  border-radius: var(--radius-md);
+/* File upload - lined-bottom card style */
+.empleo__file-upload {
+  position: relative;
+}
+
+.empleo__file-label {
+  display: block;
+  cursor: pointer;
+}
+
+.empleo__file-dropzone {
+  position: relative;
+  border: 2px dashed var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  background-color: var(--color-surface);
+  transition: all var(--motion-base);
+}
+
+.empleo__file-dropzone:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-tint);
+}
+
+.empleo__file-dropzone--drag {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-tint);
+  transform: scale(1.01);
+}
+
+.empleo__file-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color-primary-tint);
+  color: var(--color-primary);
+  margin-bottom: var(--space-3);
+  transition: all var(--motion-micro);
+}
+
+.empleo__file-dropzone:hover .empleo__file-icon {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.empleo__file-text {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: var(--space-1);
+}
+
+.empleo__file-hint {
+  color: var(--color-ink-subtle);
+  font-size: 0.8125rem;
+}
+
+.empleo__file-input {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.empleo__file-selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
   background-color: var(--color-surface-alt);
+  font-size: 0.875rem;
+}
+
+.empleo__file-name {
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.empleo__file-size {
+  color: var(--color-ink-subtle);
+}
+
+.empleo__file-remove {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--color-ink-subtle);
+  font-size: 1.25rem;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--motion-micro);
+}
+
+.empleo__file-remove:hover {
+  color: var(--color-danger);
+  background-color: var(--color-danger);
+  color: #fff;
 }

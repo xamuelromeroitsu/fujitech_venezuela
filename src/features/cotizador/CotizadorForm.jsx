@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
 import { insertRow } from '../../lib/supabaseClient'
-// Reglas de validación centralizadas — editar en validators.js
 import { rules } from '../../lib/validators'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -12,9 +11,9 @@ import FormError from '../../components/form/FormError'
 import './CotizadorForm.css'
 
 const PASOS = [
-  { key: 'datos', label: '1. Tus datos' },
-  { key: 'equipo', label: '2. El equipo' },
-  { key: 'cobertura', label: '3. Cobertura' },
+  { key: 'datos', label: 'Datos' },
+  { key: 'equipo', label: 'Equipo' },
+  { key: 'cobertura', label: 'Cobertura' },
 ]
 
 const TIPOS_INMUEBLE = ['Residencial', 'Comercial', 'Industrial', 'Edificio de oficinas']
@@ -43,7 +42,6 @@ function validate(values) {
   const e = rules.email(values.email); if (e) errors.email = e
   const t = rules.telefono(values.telefono); if (t) errors.telefono = t
   const ed = rules.edificio(values.edificio); if (ed) errors.edificio = ed
-  // Tipo inmueble requerido en paso 1 — si agregas otro campo de paso 1, valida aquí
   const ti = rules.tipoInmueble(values.tipoInmueble); if (ti) errors.tipoInmueble = ti
   if (values.paradas && Number(values.paradas) < 1) errors.paradas = 'Mínimo 1 parada'
   return errors
@@ -71,8 +69,6 @@ export default function CotizadorForm() {
     },
   })
 
-  // Valida solo los campos del paso actual antes de avanzar
-  // Si agregas campo nuevo, agrégalo al array 'relevant' del paso correspondiente
   async function handleNext() {
     const partial = { ...values }
     const errs = validate(partial)
@@ -81,7 +77,6 @@ export default function CotizadorForm() {
       : paso === 1 ? ['tipoInmueble', 'servicio'] : []
     const next = {}
     relevant.forEach((k) => { if (errs[k]) next[k] = errs[k] })
-    // Muestra errores en pantalla y bloquea avance
     if (Object.keys(next).length > 0) { setErrors(next); return }
     setPaso((p) => Math.min(p + 1, PASOS.length - 1))
   }
@@ -100,23 +95,24 @@ export default function CotizadorForm() {
 
   return (
     <form className="cotizador" onSubmit={(e) => handleSubmit(e).then((r) => { if (r.ok) setEnviado(true) })}>
-      <ol className="cotizador__pasos">
+      <ol className="cotizador__rail" aria-label="Pasos de cotización">
         {PASOS.map((p, i) => (
-          <li key={p.key} className={`cotizador__paso ${i === paso ? 'cotizador__paso--active' : ''} ${i < paso ? 'cotizador__paso--done' : ''}`}>
-            {p.label}
+          <li key={p.key} className={`cotizador__step-marker ${i === paso ? 'cotizador__step-marker--active' : ''} ${i < paso ? 'cotizador__step-marker--done' : ''}`}>
+            <span className="cotizador__step-number">{i + 1}</span>
+            <span className="cotizador__step-label">{p.label}</span>
           </li>
         ))}
       </ol>
 
       {paso === 0 && (
-        <div className="cotizador__step">
+        <div className="cotizador__step" data-reveal>
           <PersonalDataFields values={values} errors={errors} onChange={handleChange} />
           <Input label="Nombre del edificio o comunidad" name="edificio" maxLength={50} value={values.edificio} onChange={handleChange} error={errors.edificio} />
         </div>
       )}
 
       {paso === 1 && (
-        <div className="cotizador__step">
+        <div className="cotizador__step" data-reveal>
           <ChipGroup label="Tipo de inmueble" options={TIPOS_INMUEBLE} value={values.tipoInmueble} onChange={(v) => setValue('tipoInmueble', v)} error={errors.tipoInmueble} />
           <ChipGroup label="Servicio que necesitas" options={SERVICIOS} value={values.servicio} onChange={(v) => setValue('servicio', v)} />
           <Input
@@ -128,13 +124,15 @@ export default function CotizadorForm() {
             value={values.paradas}
             onChange={handleChange}
             error={errors.paradas}
+            inputMode="numeric"
           />
         </div>
       )}
 
       {paso === 2 && (
-        <div className="cotizador__step">
-          <div className="cotizador__coberturas">
+        <div className="cotizador__step" data-reveal>
+          <fieldset className="cotizador__coberturas" aria-label="Nivel de cobertura">
+            <legend className="visually-hidden">Selecciona nivel de cobertura</legend>
             {COBERTURAS.map((c) => (
               <label key={c.id} className={`cotizador__cobertura ${values.cobertura === c.id ? 'cotizador__cobertura--active' : ''}`}>
                 <input
@@ -145,11 +143,13 @@ export default function CotizadorForm() {
                   onChange={handleChange}
                   className="visually-hidden"
                 />
-                <strong>{c.label}</strong>
-                <span>{c.text}</span>
+                <div className="cotizador__cobertura-content">
+                  <strong className="cotizador__cobertura-label">{c.label}</strong>
+                  <span className="cotizador__cobertura-text">{c.text}</span>
+                </div>
               </label>
             ))}
-          </div>
+          </fieldset>
           <Input
             label="Cuéntanos más (opcional)"
             name="mensaje"
@@ -171,7 +171,7 @@ export default function CotizadorForm() {
         {paso < PASOS.length - 1 ? (
           <Button type="button" onClick={handleNext}>Continuar →</Button>
         ) : (
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} size="lg">
             {isSubmitting ? 'Enviando...' : 'Solicitar propuesta'}
           </Button>
         )}

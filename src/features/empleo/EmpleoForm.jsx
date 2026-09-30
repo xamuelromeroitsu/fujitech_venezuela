@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
 import { insertRow } from '../../lib/supabaseClient'
-// Reglas de validación centralizadas — editar en validators.js
 import { rules } from '../../lib/validators'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -9,6 +8,7 @@ import FormSuccess from '../../components/form/FormSuccess'
 import ChipGroup from '../../components/form/ChipGroup'
 import PersonalDataFields from '../../components/form/PersonalDataFields'
 import FormError from '../../components/form/FormError'
+import { IconArrowUp } from '../../components/icons'
 import './EmpleoForm.css'
 
 const MANIOBRAS = [
@@ -76,25 +76,41 @@ export default function EmpleoForm() {
       <div className="empleo__grid">
         <PersonalDataFields values={values} errors={errors} onChange={handleChange} />
         <Input label="Ciudad" name="ciudad" value={values.ciudad} onChange={handleChange} />
-        <Input label="Años de experiencia" name="anios" type="number" min="0" max="60" value={values.anios} onChange={handleChange} error={errors.anios} />
+        <Input label="Años de experiencia" name="anios" type="number" min="0" max="60" value={values.anios} onChange={handleChange} error={errors.anios} inputMode="numeric" />
       </div>
 
       <ChipGroup label="Maniobras que dominas" options={MANIOBRAS} value={values.maniobras} onChange={(v) => setValue('maniobras', v)} multi error={errors.maniobras} />
 
-      <div className="field">
-        {/* MIME types: PDF (.pdf), Word 97-2003 (.doc), Word 2007+ (.docx) */}
-        <label className="field__label" htmlFor="cv">
-          Síntesis curricular (PDF o Word)
+      <div className="empleo__file-upload" data-reveal>
+        <label className="empleo__file-label" htmlFor="cv">
+          <div className="empleo__file-dropzone" id="dropzone">
+            <IconArrowUp size={32} strokeWidth={1.5} className="empleo__file-icon" />
+            <p className="empleo__file-text">Arrastra tu CV aquí o haz clic para seleccionar</p>
+            <p className="empleo__file-hint">PDF o Word (.doc, .docx), máx. 5 MB</p>
+            <input
+              id="cv"
+              name="cv"
+              type="file"
+              accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              className="empleo__file-input"
+              onChange={(e) => setValue('cv', e.target.files?.[0] || null)}
+              onDragOver={(e) => { e.preventDefault(); e.currentTarget.closest('.empleo__file-dropzone').classList.add('empleo__file-dropzone--drag') }}
+              onDragLeave={(e) => { e.currentTarget.closest('.empleo__file-dropzone').classList.remove('empleo__file-dropzone--drag') }}
+              onDrop={(e) => {
+                e.preventDefault()
+                e.currentTarget.closest('.empleo__file-dropzone').classList.remove('empleo__file-dropzone--drag')
+                if (e.dataTransfer.files[0]) setValue('cv', e.dataTransfer.files[0])
+              }}
+            />
+          </div>
         </label>
-        <input
-          id="cv"
-          name="cv"
-          type="file"
-          accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          className="empleo__file"
-          onChange={(e) => setValue('cv', e.target.files?.[0] || null)}
-        />
-        <p className="field__hint">Archivos PDF o Word (.doc, .docx), máximo 5 MB.</p>
+        {values.cv && (
+          <div className="empleo__file-selected">
+            <span className="empleo__file-name">{values.cv.name}</span>
+            <span className="empleo__file-size">{(values.cv.size / 1024 / 1024).toFixed(2)} MB</span>
+            <button type="button" className="empleo__file-remove" onClick={() => setValue('cv', null)} aria-label="Eliminar archivo">×</button>
+          </div>
+        )}
         {errors.cv && <p className="field__error" role="alert">{errors.cv}</p>}
       </div>
 
