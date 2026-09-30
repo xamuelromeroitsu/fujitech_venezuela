@@ -3,6 +3,7 @@ import { BrowserRouter, useLocation } from 'react-router-dom'
 import AppRoutes from './routes/AppRoutes'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
+import ScrollRevealProvider from './components/ScrollRevealProvider'
 
 /**
  * ScrollToTop — Sube al inicio de la página al navegar entre rutas.
@@ -33,6 +34,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <ScrollRevealProvider />
       <Navbar />
       <main>
         <AppRoutes />
