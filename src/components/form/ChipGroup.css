@@ -6,21 +6,31 @@
 
 .chip-group__chip {
   padding: var(--space-2) var(--space-4);
-  border: 1.5px solid var(--color-border);
-  border-radius: 999px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
+  border: 1.5px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--color-ink-muted);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.875rem;
-  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: all var(--motion-micro);
+  cursor: pointer;
 }
 
 .chip-group__chip:hover {
   border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .chip-group__chip--active {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-tint);
   border-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-primary);
+}
+
+.chip-group__chip:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
