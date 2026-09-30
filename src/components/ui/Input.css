@@ -5,9 +5,12 @@
 }
 
 .field__label {
+  font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.9375rem;
-  color: var(--color-text);
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .field__required {
@@ -17,11 +20,13 @@
 .field__control {
   width: 100%;
   padding: var(--space-3) var(--space-4);
-  border: 1.5px solid var(--color-border);
+  border: 1.5px solid var(--color-line-strong);
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
-  color: var(--color-text);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  transition: border-color var(--motion-micro), box-shadow var(--motion-micro);
 }
 
 .field__control:focus {
@@ -47,9 +52,11 @@ textarea.field__control {
   color: var(--color-danger);
   font-size: 0.8125rem;
   font-weight: 500;
+  font-family: var(--font-sans);
 }
 
 .field__hint {
-  color: var(--color-text-secondary);
+  color: var(--color-ink-subtle);
   font-size: 0.8125rem;
+  font-family: var(--font-sans);
 }

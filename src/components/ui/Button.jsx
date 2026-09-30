@@ -3,6 +3,7 @@ import './Button.css'
 const VARIANTS = {
   primary: 'btn--primary',
   secondary: 'btn--secondary',
+  outline: 'btn--outline',
   ghost: 'btn--ghost',
   whatsapp: 'btn--whatsapp',
 }

@@ -8,9 +8,35 @@ export default function Input({
   hint,
   required,
   className = '',
+  onKeyDown,
   ...props
 }) {
   const id = `field-${name}`
+
+  function handleKeyDown(e) {
+    if (e.key.length > 1) {
+      if (onKeyDown) onKeyDown(e)
+      return
+    }
+    if (e.ctrlKey || e.metaKey) {
+      if (onKeyDown) onKeyDown(e)
+      return
+    }
+    if (props.inputMode === 'numeric' || type === 'tel') {
+      if (!/[\d+\s-]/.test(e.key)) {
+        e.preventDefault()
+        return
+      }
+    }
+    if (props.pattern === '[^\d]*') {
+      if (/\d/.test(e.key)) {
+        e.preventDefault()
+        return
+      }
+    }
+    if (onKeyDown) onKeyDown(e)
+  }
+
   return (
     <div className={`field ${className}`}>
       {label && (
@@ -20,13 +46,14 @@ export default function Input({
         </label>
       )}
       {type === 'textarea' ? (
-        <textarea id={id} name={name} className={`field__control ${error ? 'field__control--error' : ''}`} {...props} />
+        <textarea id={id} name={name} className={`field__control ${error ? 'field__control--error' : ''}`} onKeyDown={handleKeyDown} {...props} />
       ) : (
         <input
           id={id}
           name={name}
           type={type}
           className={`field__control ${error ? 'field__control--error' : ''}`}
+          onKeyDown={handleKeyDown}
           {...props}
         />
       )}
