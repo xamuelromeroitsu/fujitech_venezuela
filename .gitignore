@@ -29,3 +29,6 @@ pnpm-debug.log*
 
 # Diagnóstico (Vite 8)
 *.local
+
+.DS_Store
+public/fonts/*.woff2  # si los fonts son generados
