@@ -4,18 +4,27 @@
  * NO añadir colores fuera de esta tabla sin aprobación.
  */
 :root {
-  /* Identidad */
-  --color-primary: #d01126;
-  --color-primary-dark: #a40e1f;
-  --color-primary-tint: #fbedef;
+  /* Identidad — rojo Fujitec refinado */
+  --color-primary: #c40d1f;
+  --color-primary-dark: #9b0a18;
+  --color-primary-tint: #faf0f1;
 
-  /* Neutros */
-  --color-text: #1f2430;
-  --color-text-secondary: #5b6472;
-  --color-border: #e2e5ea;
+  /* Neutros industriales — mayor contraste, menos "azulados" */
+  --color-ink: #0f1218;
+  --color-ink-muted: #3d4450;
+  --color-ink-subtle: #6b7280;
+  --color-line: #e5e7eb;
+  --color-line-strong: #d1d5db;
+
+  /* Superficies */
   --color-surface: #ffffff;
-  --color-surface-alt: #f6f7f9;
-  --color-footer: #434343;
+  --color-surface-alt: #f8f9fa;
+  --color-surface-elevated: #ffffff;
+
+  /* Footer — negro grafito */
+  --color-footer: #1a1d23;
+  --color-footer-text: #e5e7eb;
+  --color-footer-muted: #9ca3af;
 
   /* Semánticos */
   --color-success: #16a34a;
@@ -23,19 +32,10 @@
   --color-danger: #dc2626;
 
   /* Tipografía */
-  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', 'Sora', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
-  /* Radios */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-
-  /* Sombras */
-  --shadow-sm: 0 1px 2px rgba(31, 36, 48, 0.06);
-  --shadow-md: 0 4px 12px rgba(31, 36, 48, 0.08);
-  --shadow-lg: 0 12px 32px rgba(31, 36, 48, 0.12);
-
-  /* Espaciado (escala 4px) */
+  /* Espaciado — escala rítmica (4px base) */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -43,10 +43,32 @@
   --space-5: 24px;
   --space-6: 32px;
   --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 96px;
+  --space-8: 72px;
+  --space-9: 108px;
+  --space-10: 144px;
 
   /* Layout */
   --container: 1120px;
   --navbar-height: 72px;
+
+  /* Motion — preciso, industrial */
+  --motion-micro: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-base: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-macro: 350ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* Sombras — elevación controlada */
+  --shadow-sm: 0 1px 2px rgba(15, 18, 24, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 18, 24, 0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 18, 24, 0.12);
+
+  /* Radios */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* Icon sizes */
+  --icon-sm: 20px;
+  --icon-md: 24px;
+  --icon-lg: 32px;
+  --icon-xl: 48px;
 }
