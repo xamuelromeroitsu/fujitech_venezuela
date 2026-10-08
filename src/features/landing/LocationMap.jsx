@@ -5,7 +5,7 @@ import { IconBuilding2, IconPhone, IconMail, IconMapPin } from '../../components
 import './LocationMap.css'
 
 const FUJITEC_COORDS = [10.4932769, -66.8103574]
-const ZOOM_LEVEL = 16
+const ZOOM_LEVEL = 17
 
 const redIcon = L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',

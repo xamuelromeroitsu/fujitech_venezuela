@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import useHideOnScroll from '../../hooks/useHideOnScroll'
+import { IconMapPin } from '../icons'
 import './Navbar.css'
 
 const LINKS = [
@@ -13,6 +14,26 @@ const LINKS = [
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const hidden = useHideOnScroll()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const navigateToLocation = () => {
+    setOpen(false)
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: 'ubicacion' } })
+    } else {
+      document.getElementById('ubicacion')?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  useEffect(() => {
+    if (location.state?.scrollTo === 'ubicacion') {
+      const timer = setTimeout(() => {
+        document.getElementById('ubicacion')?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [location])
 
   return (
     <header className={`navbar ${hidden ? 'navbar--hidden' : ''}`}>
@@ -50,6 +71,10 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
+          <button type="button" className="navbar__link navbar__location-link" onClick={navigateToLocation}>
+            <IconMapPin size={16} strokeWidth={2} />
+            Ubicación
+          </button>
         </nav>
       </div>
     </header>
