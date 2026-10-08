@@ -1,6 +1,7 @@
 @import './tokens.css';
 @import './icons.css';
 @import './scroll-reveal.css';
+@import 'leaflet/dist/leaflet.css';
 
 /* Space Grotesk — self-hosted */
 @font-face {

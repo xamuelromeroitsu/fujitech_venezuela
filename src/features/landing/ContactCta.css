@@ -36,7 +36,6 @@
 
 .cta__actions .btn--ghost {
   color: var(--color-footer-text);
-  border: 1.5px solid var(--color-line-strong);
 }
 
 .cta__actions .btn--ghost:hover {
@@ -44,14 +43,4 @@
   border-color: var(--color-primary);
   background-color: transparent;
   text-decoration: none;
-}
-
-.cta__actions .btn--primary {
-  background-color: var(--color-primary);
-  color: #fff;
-}
-
-.cta__actions .btn--primary:hover {
-  background-color: var(--color-primary-dark);
-  color: #fff;
 }
