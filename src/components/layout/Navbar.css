@@ -82,12 +82,29 @@
   background: none;
   border: none;
   padding: 0;
+  padding-block: var(--space-2);
   cursor: pointer;
   font-size: 0.9375rem;
+  position: relative;
 }
 
 .navbar__location-link svg {
   flex-shrink: 0;
+}
+
+.navbar__location-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  transition: width var(--motion-base);
+}
+
+.navbar__location-link:hover::after {
+  width: 100%;
 }
 
 .navbar__toggle {
