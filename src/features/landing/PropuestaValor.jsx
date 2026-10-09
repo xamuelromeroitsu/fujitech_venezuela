@@ -1,48 +1,34 @@
 import SectionHeading from '../../components/ui/SectionHeading'
 import Card from '../../components/ui/Card'
 import { IconWrench, IconShieldCheck, IconDatabase, IconUserCog } from '../../components/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './PropuestaValor.css'
 
-const PILARES = [
-  {
-    icon: <IconWrench size={32} strokeWidth={1.5} />,
-    title: 'Mantenimiento con margen',
-    text: 'Contratos de mantenimiento claros, sin cláusulas abusivas y con repuestos homologados.',
-  },
-  {
-    icon: <IconShieldCheck size={32} strokeWidth={1.5} />,
-    title: 'Tecnología abierta',
-    text: 'Atendemos cualquier marca: sin bloqueos de software ni rehenes de un fabricante.',
-  },
-  {
-    icon: <IconDatabase size={32} strokeWidth={1.5} />,
-    title: 'Presupuestos transparentes',
-    text: 'Cotizaciones detalladas que eliminan la opacidad de precios del sector.',
-  },
-  {
-    icon: <IconUserCog size={32} strokeWidth={1.5} />,
-    title: 'Talento certificado',
-    text: 'Técnicos electromecánicos capacitados y respaldados por una multinacional.',
-  },
-]
-
 export default function PropuestaValor() {
+  const { t } = useLanguage()
+  const pillars = [
+    { key: 'maintenance', icon: <IconWrench size={32} strokeWidth={1.5} /> },
+    { key: 'openTechnology', icon: <IconShieldCheck size={32} strokeWidth={1.5} /> },
+    { key: 'transparentBudgets', icon: <IconDatabase size={32} strokeWidth={1.5} /> },
+    { key: 'certifiedTalent', icon: <IconUserCog size={32} strokeWidth={1.5} /> },
+  ]
+
   return (
     <section className="propuesta" id="propuesta" data-reveal>
       <div className="container">
         <SectionHeading
-          eyebrow="Nuestra propuesta"
-          title="Confianza que se mueve contigo"
-          description="Acompañamos juntas de condominio, constructoras y administradores en todo el ciclo de vida del equipo de transporte vertical."
+          eyebrow={t('landing.value.eyebrow')}
+          title={t('landing.value.title')}
+          description={t('landing.value.description')}
         />
         <div className="propuesta__grid">
-          {PILARES.map((p) => (
+          {pillars.map(({ key, icon }) => (
             <Card
-              key={p.title}
+              key={key}
               variant="lined-top"
-              icon={p.icon}
-              title={p.title}
-              subtitle={p.text}
+              icon={icon}
+              title={t(`landing.value.pillars.${key}.title`)}
+              subtitle={t(`landing.value.pillars.${key}.text`)}
             />
           ))}
         </div>

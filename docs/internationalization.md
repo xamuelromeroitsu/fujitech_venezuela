@@ -1,6 +1,6 @@
 # Internacionalización (i18n)
 
-> **Estado:** fase 2 implementada con ReactBits Sling Button. El selector recorre español, inglés y portugués; las demás secciones aún no están traducidas.
+> **Estado:** fase 3 implementada: Navbar y landing usan el idioma seleccionado (ES/EN/PT). Las páginas de formularios, el Footer y LocationMap aún no están traducidos.
 > **Alcance:** la traducción del contenido se incorporará gradualmente, feature por feature.
 
 Esta guía reúne las decisiones y ejemplos conversados para agregar cambio de idioma a Fujitec Venezuela poco a poco, entendiendo cada parte y manteniendo cambios pequeños que se puedan revisar y confirmar con commits separados.
@@ -217,18 +217,18 @@ Cada fase debe terminar con una revisión y una validación antes del commit. No
 |---|---|---|
 | 1. Base del idioma | ✅ Crear `src/i18n/translations.js` y `src/i18n/LanguageContext.jsx`; integrar `LanguageProvider` en `src/App.jsx`. | `feat: add language context and translation dictionary` |
 | 2. Navbar | ✅ Traducir etiquetas, accesibilidad y ubicación; integrar ReactBits Sling Button con ciclo ES → EN → PT; probar navegación y preferencia persistida. | `feat: use language selector in navbar` |
-| 3. Inicio | Migrar Hero, llamadas a la acción (CTA), servicios y testimonios. | `feat: translate landing page texts` |
+| 3. Inicio | ✅ Migrar Hero, CTA, propuesta de valor, soluciones, servicio Fujitec y testimonios en ES/EN/PT. | `feat: translate landing page texts` |
 | 4. Footer y formularios | Migrar Footer, etiquetas, botones, validaciones y mensajes de estado. | `feat: translate footer and forms` |
 | 5. Portugués | Completar y probar las traducciones PT del contenido migrado; el selector ya incluye PT. | `feat: add portuguese translations` |
 
-Las fases 1 y 2 están implementadas; los commits sugeridos son propuestas y todavía debe crearlos la persona desarrolladora. Las fases 3 a 5 son trabajo futuro. Antes de dar por completo un idioma, hay que comprobar que todas las secciones ya migradas tienen sus claves en ese idioma.
+Las fases 1, 2 y 3 están implementadas; los commits sugeridos son propuestas y todavía debe crearlos la persona desarrolladora. Las fases 4 y 5 son trabajo futuro. Antes de dar por completo un idioma, hay que comprobar que todas las secciones ya migradas tienen sus claves en ese idioma.
 
 ## Superficies identificadas para traducir
 
 Los textos visibles pueden estar repartidos entre componentes y features; agregar el contexto no los traduce automáticamente. Las áreas mencionadas para la migración progresiva son:
 
 - Navbar, incluyendo texto accesible de los controles.
-- Página principal: Hero, propuesta de valor, soluciones, testimonios y CTA.
+- Página principal: Hero, propuesta de valor, soluciones, servicio Fujitec, testimonios y CTA (ES/EN/PT implementados).
 - Footer.
 - Cotizador, IPR y empleo: títulos, campos, botones, errores y confirmaciones.
 - Textos alternativos de imágenes y otros atributos accesibles cuando su contenido dependa del idioma.
@@ -244,8 +244,9 @@ La organización actual observada en el repositorio es:
 - `src/components/layout/LanguageSling.jsx`: conecta Sling Button, el ciclo de idiomas y las etiquetas accesibles.
 - `src/components/ui/SlingButton.jsx` y `SlingButton.css`: componente de ReactBits y sus estilos.
 - `src/components/ui/SlingButton.LICENSE.md`: atribución y condiciones de licencia del componente.
+- `src/features/landing/Hero.jsx`, `PropuestaValor.jsx`, `Soluciones.jsx`, `SoloFujitec.jsx`, `Testimonios.jsx` y `ContactCta.jsx`: secciones de landing traducidas mediante `useLanguage()` y claves `landing.*`.
 - `src/components/layout/Footer.jsx`: migración prevista en la fase 4.
-- `src/features/landing/`: secciones de la página principal previstas en la fase 3.
+- `src/features/landing/LocationMap.jsx`: contenido pendiente de migrar junto con las demás secciones aún no traducidas.
 - `src/pages/` y `src/features/`: páginas y funcionalidades que se revisarán para las fases siguientes.
 - `src/i18n/translations.js`: diccionario inicial de español e inglés.
 - `src/i18n/LanguageContext.jsx`: estado, persistencia, atributo `lang`, función `t()` y hook `useLanguage()`.
@@ -265,7 +266,7 @@ Al cerrar las fases correspondientes, comprobar:
 ## Registro de decisiones de aprendizaje
 
 - Se avanzará de forma incremental para poder entender cada parte y separar el trabajo en commits pequeños.
-- Sling Button permite recorrer ES/EN/PT; el contenido general del sitio se traduce gradualmente.
+- Sling Button permite recorrer ES/EN/PT; las secciones principales de la landing ya usan los tres idiomas y el resto del contenido se traduce gradualmente.
 - Las claves se organizarán por sección, por ejemplo `nav.home` y `footer.contact`.
 - La experiencia de idioma se centraliza en contexto para evitar duplicar estado en cada componente.
 - Cambiar el idioma solo afectará los textos migrados. El resto seguirá en su idioma actual hasta completar su fase.

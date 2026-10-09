@@ -1,24 +1,25 @@
 import { Link } from 'react-router-dom'
-import Button from '../../components/ui/Button'
 import { IconArrowRight, IconExternalLink } from '../../components/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './ContactCta.css'
 
 export default function ContactCta() {
+  const { t } = useLanguage()
+
   return (
     <section className="cta" id="contacto" data-reveal>
       <div className="container cta__inner">
-        <h2 className="cta__title">¿Listo para mover tu comunidad o proyecto?</h2>
+        <h2 className="cta__title">{t('landing.contactCta.title')}</h2>
         <p className="cta__text">
-          Solicita una cotización en menos de 5 minutos. Un asesor Fujitec te contactará
-          con una propuesta formal.
+          {t('landing.contactCta.description')}
         </p>
         <div className="cta__actions">
           <Link to="/cotizar" className="btn btn--primary btn--lg">
-            Cotizar ahora
+            {t('landing.contactCta.quote')}
             <IconArrowRight size={20} strokeWidth={2} />
           </Link>
           <Link to="/empleo" className="btn btn--ghost btn--lg">
-            ¿Eres técnico? Únete
+            {t('landing.contactCta.joinTeam')}
             <IconExternalLink size={18} strokeWidth={2} />
           </Link>
         </div>

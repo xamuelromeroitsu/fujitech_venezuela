@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
-import Button from '../../components/ui/Button'
 import { IconArrowRight, IconGridPattern } from '../../components/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './Hero.css'
 
 export default function Hero() {
+  const { t } = useLanguage()
+
   return (
     <section className="hero">
       <div className="hero__bg-pattern" aria-hidden="true">
@@ -11,37 +13,37 @@ export default function Hero() {
       </div>
       <div className="container hero__inner">
         <div className="hero__badge-wrapper">
-          <span className="hero__badge">En Venezuela desde 1968</span>
+          <span className="hero__badge">{t('landing.hero.badge')}</span>
         </div>
         <h1 className="hero__title">
-          Transporte vertical que <span className="hero__title-accent">mueve</span> a Venezuela
+          {t('landing.hero.title.before')}{' '}
+          <span className="hero__title-accent">{t('landing.hero.title.accent')}</span>{' '}
+          {t('landing.hero.title.after')}
         </h1>
         <p className="hero__subtitle">
-          Mantenimiento, modernización e instalación de ascensores y escaleras mecánicas
-          de cualquier marca. Tecnología abierta, repuestos homologados y respuesta
-          rápida para tu comunidad o proyecto.
+          {t('landing.hero.subtitle')}
         </p>
         <div className="hero__actions">
           <Link to="/cotizar" className="btn btn--primary btn--lg">
-            Solicitar cotización
+            {t('landing.hero.requestQuote')}
             <IconArrowRight size={20} strokeWidth={2} />
           </Link>
           <Link to="/ipr" className="btn btn--outline btn--lg">
-            Consultar semáforo IPR
+            {t('landing.hero.checkIpr')}
           </Link>
         </div>
-        <ul className="hero__trust" aria-label="Garantías de servicio">
+        <ul className="hero__trust" aria-label={t('landing.hero.trustLabel')}>
           <li>
             <svg className="hero__trust-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M7 10l3 3 7-7"/></svg>
-            Repuestos originales
+            {t('landing.hero.trust.originalParts')}
           </li>
           <li>
             <svg className="hero__trust-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M7 10l3 3 7-7"/></svg>
-            Presencia desde 1968
+            {t('landing.hero.trust.since1968')}
           </li>
           <li>
             <svg className="hero__trust-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M7 10l3 3 7-7"/></svg>
-            Respuesta 24/7
+            {t('landing.hero.trust.response247')}
           </li>
         </ul>
       </div>

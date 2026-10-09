@@ -1,54 +1,40 @@
 import SectionHeading from '../../components/ui/SectionHeading'
 import Card from '../../components/ui/Card'
 import { IconShieldCheck, IconDatabase, IconCertifiedUser, IconWrench } from '../../components/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './SoloFujitec.css'
 
-const RAZONES = [
-  {
-    icon: <IconWrench size={32} strokeWidth={1.5} />,
-    title: 'Repuestos originales',
-    text: 'Solo componentes homologados de fábrica Fujitec. Sin réplicas ni sustitutos.',
-  },
-  {
-    icon: <IconShieldCheck size={32} strokeWidth={1.5} />,
-    title: 'Garantía real de fábrica',
-    text: 'Cada intervención respaldada por la garantía del fabricante a nivel mundial.',
-  },
-  {
-    icon: <IconDatabase size={32} strokeWidth={1.5} />,
-    title: 'Trazabilidad total',
-    text: 'Historial documentado de cada equipo desde su instalación y cada servicio realizado.',
-  },
-{
-      icon: <IconCertifiedUser size={32} strokeWidth={1.5} />,
-      title: 'Técnicos certificados',
-      text: 'Personal capacitado por la marca, con acceso a especificaciones y manuales originales.',
-    },
-]
-
 export default function SoloFujitec() {
+  const { t } = useLanguage()
+  const reasons = [
+    { key: 'originalParts', icon: <IconWrench size={32} strokeWidth={1.5} /> },
+    { key: 'factoryWarranty', icon: <IconShieldCheck size={32} strokeWidth={1.5} /> },
+    { key: 'traceability', icon: <IconDatabase size={32} strokeWidth={1.5} /> },
+    { key: 'certifiedTechnicians', icon: <IconCertifiedUser size={32} strokeWidth={1.5} /> },
+  ]
+
   return (
     <section className="solo-fujitec" id="servicio-fujitec" data-reveal>
       <div className="container">
         <SectionHeading
-          eyebrow="Marca propia"
-          title="Servicio de fábrica para equipos Fujitec"
-          description="Somos fabricantes: atendemos únicamente nuestros propios equipos con repuestos originales y garantía de fábrica."
+          eyebrow={t('landing.factoryService.eyebrow')}
+          title={t('landing.factoryService.title')}
+          description={t('landing.factoryService.description')}
         />
         <div className="solo-fujitec__grid">
-          {RAZONES.map((r) => (
+          {reasons.map(({ key, icon }) => (
             <Card
-              key={r.title}
+              key={key}
               variant="lined-top"
-              icon={r.icon}
-              title={r.title}
-              subtitle={r.text}
+              icon={icon}
+              title={t(`landing.factoryService.items.${key}.title`)}
+              subtitle={t(`landing.factoryService.items.${key}.text`)}
             />
           ))}
         </div>
         <div className="solo-fujitec__aviso">
-          <strong>¿Tu ascensor es de otra marca?</strong>
-          <span>Podemos evaluar su sustitución por un equipo Fujitec, con asesoría técnica y plan de pagos.</span>
+          <strong>{t('landing.factoryService.noticeTitle')}</strong>
+          <span>{t('landing.factoryService.noticeText')}</span>
         </div>
       </div>
     </section>
