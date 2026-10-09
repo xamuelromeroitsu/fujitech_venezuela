@@ -73,6 +73,7 @@ El inventario completo del proyecto está en [`estructura.txt`](estructura.txt).
 ## Documentación
 
 - [Guía de descubrimiento para IA](docs/README-IA.md)
+- [Guía de internacionalización (i18n)](docs/internationalization.md)
 - [Brief del producto](docs/product-brief.md)
 - [Alcance del MVP](docs/mvp-scop.md)
 - [Sistema de diseño](docs/design-system.md)

@@ -56,6 +56,14 @@
 
 ---
 
+## 🌐 Internacionalización
+
+| Documento | Descripción |
+|-----------|-------------|
+| [Guía de i18n](internationalization.md) | Diccionario ES/EN/PT, contexto de idioma, selector, vocabulario técnico y plan gradual por fases |
+
+---
+
 ## ⚡ Features (Módulos Funcionales)
 
 | Feature | Ruta | Documento | Supabase Table |
@@ -124,6 +132,7 @@
 - **Agregar icono** → [Icon System](icons.md#crear-nuevo-icono)
 - **Animar al scroll** → [ScrollReveal](animations.md#scrollrevealprovider)
 - **Validar email** → [Validators](validators.md#email)
+- **Agregar idiomas** → [Guía de i18n](internationalization.md)
 - **Deploy a Vercel** → [Deployment](deployment.md)
 - **Git commit message** → [Development](development.md#commits-convencionales)
 
