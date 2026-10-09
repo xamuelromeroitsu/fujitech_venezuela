@@ -1,0 +1,77 @@
+{
+  "version": "1.0",
+  "site": {
+    "name": "Fujitec Venezuela",
+    "description": "Servicios de transporte vertical, ascensores y escaleras mecánicas en Venezuela.",
+    "language": "es-VE",
+    "entrypoint": "/"
+  },
+  "capabilities": [
+    {
+      "id": "vertical-transport-services",
+      "name": "Soluciones de transporte vertical",
+      "description": "Mantenimiento, modernización, repuestos y sustitución de equipos Fujitec en Venezuela."
+    },
+    {
+      "id": "periodic-inspection-guidance",
+      "name": "Orientación sobre inspección IPR",
+      "description": "Consulta orientativa del estado de inspección mediante RAE o dirección del edificio."
+    },
+    {
+      "id": "technical-talent",
+      "name": "Postulación de talento técnico",
+      "description": "Recepción de postulaciones de profesionales del área electromecánica."
+    }
+  ],
+  "catalogs": [
+    {
+      "id": "services",
+      "name": "Servicios",
+      "items": [
+        {
+          "id": "maintenance",
+          "name": "Mantenimiento preventivo y correctivo",
+          "description": "Planes para conservar la operación y reducir paradas no planificadas."
+        },
+        {
+          "id": "modernization",
+          "name": "Modernización de ascensores",
+          "description": "Actualización de componentes críticos según la condición del equipo."
+        },
+        {
+          "id": "spare-parts",
+          "name": "Repuestos y componentes",
+          "description": "Suministro de componentes revisados según modelo y especificación."
+        },
+        {
+          "id": "technical-diagnosis",
+          "name": "Diagnóstico técnico",
+          "description": "Evaluación del equipo y recomendaciones priorizadas de intervención."
+        }
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "id": "request-quote",
+      "name": "Solicitar estimación de cuotas",
+      "type": "web-form",
+      "entrypoint": "/cotizar",
+      "description": "Formulario web para solicitar una estimación y propuesta de servicio."
+    },
+    {
+      "id": "check-ipr",
+      "name": "Consultar estado IPR",
+      "type": "web-form",
+      "entrypoint": "/ipr",
+      "description": "Formulario web de consulta orientativa por RAE o dirección."
+    },
+    {
+      "id": "apply-for-employment",
+      "name": "Postularse a empleo",
+      "type": "web-form",
+      "entrypoint": "/empleo",
+      "description": "Formulario web para enviar datos de contacto, experiencia y CV."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+# Fujitec Venezuela
+
+> Transporte vertical, ascensores y escaleras mecánicas desde 1968.
+
+## Páginas principales
+
+- [Inicio](/)
+- [Estimador de cuotas](/cotizar)
+- [Inspección IPR](/ipr)
+- [Trabaja con nosotros](/empleo)
