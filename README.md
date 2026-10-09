@@ -1,150 +1,83 @@
-# Fujitec Venezuela — Sitio Web Comercial y Corporativo
+# Fujitec Venezuela
 
-Plataforma digital de captación de negocio y educación al cliente para el mercado de transporte vertical venezolano. Landing page one-page scroll con módulos interactivos de cotización, inspecciones y reclutamiento.
+Sitio web corporativo para presentar servicios de transporte vertical y facilitar solicitudes de cotización, consultas IPR y postulaciones de talento en Venezuela.
 
----
+## Explora el sitio
 
-## Stack tecnológico
-
-| Tecnología | Versión | Uso |
+| Sección | Ruta | Qué puedes hacer |
 |---|---|---|
-| React | 19.2.8 | UI / SPA |
-| Vite | 8.2.1 | Bundler / Dev server |
-| React Router DOM | 7.18.2 | Enrutamiento SPA con lazy loading |
-| Supabase JS | 2.49.1 | Conexión a base de datos (BaaS) |
-| CSS puro | — | Estilos por componente con custom properties |
+| Inicio | `/` | Conocer la empresa, sus soluciones y formas de contacto. |
+| Estimador de cuotas | `/cotizar` | Enviar datos del edificio y solicitar una propuesta de servicio. |
+| Consulta IPR | `/ipr` | Ingresar un RAE o dirección y recibir una orientación sobre la inspección. |
+| Trabaja con nosotros | `/empleo` | Enviar datos profesionales y adjuntar un CV. |
+| Administración | `/admin` | Ver el placeholder del futuro portal de gestión. |
 
----
+## Ejecutar localmente
 
-## Inicio rápido
+Requiere Node.js `20.19` o superior.
 
 ```bash
-# Instalar dependencias
 npm install
-
-# Desarrollo local
 npm run dev
-
-# Build de producción
-npm run build
-
-# Preview del build
-npm run preview
 ```
 
----
+Comandos disponibles:
 
-## Variables de entorno
-
-Copiar `.env.example` a `.env` y completar:
-
+```bash
+npm run build    # genera la versión de producción en dist/
+npm run preview  # sirve localmente el build generado
 ```
 
-Sin estas variables, la app funciona en **modo demo** (los inserts se registran en consola).
+## Supabase
 
----
+Para guardar solicitudes reales, configura estas variables en `.env` o en el entorno del despliegue:
 
-## Estructura del proyecto
-
-```
-src/
-├── main.jsx                    # Entry point
-├── App.jsx                     # Raíz: BrowserRouter + Navbar + Rutas + Footer
-│
-├── routes/
-│   └── AppRoutes.jsx           # Definición de rutas con lazy loading
-│
-├── pages/                      # Una página por ruta
-│   ├── Home.jsx                # / — Landing principal
-│   ├── CotizarPage.jsx         # /cotizar — Formulario de cotización
-│   ├── IprPage.jsx             # /ipr — Consultor de inspecciones IPR
-│   ├── EmpleoPage.jsx          # /empleo — Formulario de empleo
-│   └── AdminDashboard.jsx      # /admin — Panel admin (placeholder)
-│
-├── features/                   # Módulos por funcionalidad
-│   ├── landing/                # Secciones de la landing
-│   ├── cotizador/              # Formulario multi-paso de cotización
-│   ├── ipr/                    # Consultor de semáforo IPR
-│   ├── empleo/                 # Formulario de postulación laboral
-│   └── whatsapp/               # Widget de WhatsApp
-│
-├── components/                 # Componentes compartidos
-│   ├── Navbar.jsx
-│   ├── Footer.jsx
-│   └── ui/                     # Design system: Button, Input, Card, SectionHeading
-│
-├── hooks/
-│   ├── useForm.js              # Manejo de formularios con validación
-│   └── useHideOnScroll.js      # Ocultar/mostrar navbar al scrollear
-│
-├── lib/
-│   ├── supabaseClient.js       # Cliente Supabase + insertRow()
-│   └── validators.js           # Reglas de validación reutilizables
-│
-└── styles/
-    ├── tokens.css              # Design tokens (colores, espaciados)
-    └── global.css              # Reset y estilos globales
+```dotenv
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
 ```
 
----
+Sin ambas variables, el cliente trabaja en modo demo y registra los inserts en la consola. No pongas claves privadas o `service_role` en variables `VITE_*`: se incluyen en el bundle del navegador.
 
-## Módulos funcionales
+| Tabla | Uso |
+|---|---|
+| `leads` | Solicitudes del estimador de cuotas. |
+| `solicitudes_ipr` | Registro de consultas IPR. |
+| `candidatos_empleo` | Postulaciones y datos de candidatos. |
 
-### Landing page (`/`)
-Hero, propuesta de valor, soluciones, transparencia multimarca, testimonios y CTA de contacto.
+## Tecnología
 
-### Cotizador (`/cotizar`)
-Formulario en 3 pasos: datos del contacto → tipo de inmueble y servicio → nivel de cobertura. Envía los datos a la tabla `leads` de Supabase.
+- React 19 y React Router para la interfaz y navegación.
+- Vite 8 para desarrollo y compilación.
+- Supabase JS para persistir solicitudes cuando está configurado.
+- CSS por componente, tokens de diseño y componentes reutilizables.
 
-### IPR (`/ipr`)
-Consultor de inspecciones periódicas reglamentarias. El usuario ingresa el RAE y recibe un semáforo (verde/amarillo/rojo) con el estado de vigencia.
+## Estructura
 
-### Empleo (`/empleo`)
-Formulario de postulación para técnicos electromecánicos. Permite adjuntar CV en PDF o Word y seleccionar maniobras especializadas.
+- `src/pages/`: páginas asociadas a las rutas.
+- `src/features/`: formularios y funcionalidades de landing, IPR, empleo y WhatsApp.
+- `src/components/`: componentes compartidos, layout, formularios e interfaz.
+- `src/lib/`: cliente de Supabase y validaciones.
+- `src/styles/`: estilos globales y tokens.
+- `public/`: archivos estáticos servidos desde la raíz del sitio.
+- `docs/`: documentación del producto, sistema visual y arquitectura.
 
-### WhatsApp
-Widget flotante de contacto directo por WhatsApp.
+El inventario completo del proyecto está en [`estructura.txt`](estructura.txt).
 
----
+## Descubrimiento para asistentes
 
-## Validaciones (validators.js)
+`public/llms.txt` se publica como `/llms.txt`. El estado y la configuración de ARD/`ai-catalog.json`, incluidas las verificaciones de Vercel, están documentados en [`docs/README-IA.md`](docs/README-IA.md).
 
-Reglas centralizadas en `src/lib/validators.js`, reutilizadas en todos los formularios:
-
-| Campo | Regla | Mensaje de error |
-|---|---|---|
-| Nombre | No vacío, sin números | "El nombre no puede contener números" |
-| Email | Formato válido con extensión específica | "Email inválido (ej: nombre@dominio.com)" |
-| Teléfono | E.164: 4-15 dígitos, solo números/espacios/guiones/+ | "Máximo 15 dígitos" |
-| Edificio | Máximo 50 caracteres (VARCHAR en Supabase) | "Máximo 50 caracteres" |
-| Tipo inmueble | Requerido (seleccionar chip) | "Selecciona un tipo de inmueble" |
-| CV | PDF o Word (.doc, .docx), máximo 5 MB | "Solo se aceptan archivos PDF o Word" |
-
-Extensiones de email aceptadas: `.com`, `.org`, `.net`, `.info`, `.ve`, `.co`, `.es`, `.mx`, `.edu`, `.gob`, `.gov`, `.mil`, `.tech`, `.io`, `.app`, `.store`, `.me`, `.site`, `.online`.
-
----
-
-## Tablas de Supabase
-
-| Tabla | Formulario | Campos principales |
-|---|---|---|
-| `leads` | Cotizador | nombre, email, telefono, edificio, tipo_inmueble, servicio, paradas, cobertura, mensaje |
-| `solicitudes_ipr` | IPR | rae, estado |
-| `candidatos_empleo` | Empleo | nombre, email, telefono, ciudad, anios_experiencia, maniobras |
-
----
+> El `ai-catalog.json` actual es un catálogo inicial en JSON; no debe presentarse como un manifiesto ARD conforme hasta completar la ruta, estructura y dominio canónico requeridos.
 
 ## Documentación
 
-| Archivo | Contenido |
-|---|---|
-| [`docs/product-brief.md`](docs/product-brief.md) | Visión del producto, público objetivo, KPIs |
-| [`docs/mvp-scop.md`](docs/mvp-scop.md) | Alcance del MVP y estrategia "Conserje" |
-| [`docs/tecnical-sped.md`](docs/tecnical-sped.md) | Especificación técnica y arquitectura |
-| [`docs/design-system.md`](docs/design-system.md) | Paleta de colores, tokens y reglas de diseño |
+- [Guía de descubrimiento para IA](docs/README-IA.md)
+- [Brief del producto](docs/product-brief.md)
+- [Alcance del MVP](docs/mvp-scop.md)
+- [Sistema de diseño](docs/design-system.md)
+- [Especificación técnica](docs/tecnical-sped.md)
 
----
+## Estado del proyecto
 
-## Licencia
-
-Proyecto privado — Fujitec Venezuela.
+MVP comercial en desarrollo. El panel de administración requiere autenticación y políticas de acceso antes de gestionar datos reales.
