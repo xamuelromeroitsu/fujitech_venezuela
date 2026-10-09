@@ -4,6 +4,7 @@ import AppRoutes from './routes/AppRoutes'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import ScrollRevealProvider from './components/ScrollRevealProvider'
+import { LanguageProvider } from './i18n/LanguageContext'
 
 /**
  * ScrollToTop — Sube al inicio de la página al navegar entre rutas.
@@ -33,13 +34,15 @@ function ScrollToTop() {
 export default function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <ScrollRevealProvider />
-      <Navbar />
-      <main>
-        <AppRoutes />
-      </main>
-      <Footer />
+      <LanguageProvider>
+        <ScrollToTop />
+        <ScrollRevealProvider />
+        <Navbar />
+        <main>
+          <AppRoutes />
+        </main>
+        <Footer />
+      </LanguageProvider>
     </BrowserRouter>
   )
 }

@@ -1,6 +1,6 @@
 # Internacionalización (i18n)
 
-> **Estado:** planificación; todavía no está implementada en la aplicación.  
+> **Estado:** fase 1 implementada; el selector y las traducciones visibles se agregarán en las fases siguientes.
 > **Alcance inicial:** español e inglés. Portugués queda documentado como una ampliación posterior.
 
 Esta guía reúne las decisiones y ejemplos conversados para agregar cambio de idioma a Fujitec Venezuela poco a poco, entendiendo cada parte y manteniendo cambios pequeños que se puedan revisar y confirmar con commits separados.
@@ -19,7 +19,7 @@ La estrategia propuesta para este proyecto es:
 
 Al final, los componentes no deberían tener que decidir por su cuenta qué idioma mostrar. Reciben el texto del diccionario para el idioma activo.
 
-## Estructura propuesta
+## Estructura
 
 ```text
 src/
@@ -28,7 +28,7 @@ src/
     LanguageContext.jsx
 ```
 
-`src/i18n/` centraliza la lógica y los recursos de idioma. No hace falta reorganizar `features/` ni `components/` para comenzar: cada feature puede migrar sus textos en una fase posterior.
+`src/i18n/` centraliza la lógica y los recursos de idioma. No hace falta reorganizar `features/` ni `components/`: cada feature puede migrar sus textos en una fase posterior. La carpeta ya contiene los archivos de la fase 1.
 
 ## Diccionario de traducciones
 
@@ -39,7 +39,7 @@ translations.es.nav.home // "Inicio"
 translations.en.nav.home // "Home"
 ```
 
-Este es el diccionario de referencia compartido en la conversación:
+El diccionario implementado en `src/i18n/translations.js` contiene español e inglés:
 
 ```js
 export const translations = {
@@ -67,28 +67,16 @@ export const translations = {
       contact: 'Contact',
     },
   },
-  pt: {
-    nav: {
-      home: 'Início',
-      quote: 'Solicitar orçamento',
-      ipr: 'Status IPR',
-      jobs: 'Trabalhe conosco',
-      location: 'Localização',
-    },
-    footer: {
-      contact: 'Contato',
-    },
-  },
 }
 ```
 
-Aunque el diccionario de referencia incluye portugués, la primera implementación se limitará a `es` y `en`. La activación de `pt` se reserva para la fase 5, después de traducir y probar las secciones acordadas.
+Portugués (`pt`) apareció en la propuesta inicial, pero no está habilitado ni implementado. Su incorporación se reserva para la fase 5, después de traducir y probar las secciones acordadas.
 
 Las traducciones se amplían por sección. Por ejemplo, la landing podría tener `landing.hero.title` y el pie de página `footer.contact`. Conviene mantener una estructura equivalente en cada idioma para que todas las claves se puedan resolver.
 
 ## Contexto de idioma y función `t()`
 
-El `LanguageProvider` se encargará de compartir el idioma y la función de traducción con los componentes descendientes. El hook `useLanguage()` permitirá acceder a esos valores:
+`src/i18n/LanguageContext.jsx` implementa el `LanguageProvider`, que comparte el idioma y la función de traducción con los componentes descendientes. El hook `useLanguage()` permite acceder a esos valores:
 
 ```jsx
 const { language, setLanguage, t } = useLanguage()
@@ -105,9 +93,9 @@ for (const part of keys) {
 }
 ```
 
-Así, `t('nav.home')` equivale a buscar `translations[language].nav.home`. En la versión final hay que validar que el idioma guardado sea uno de los admitidos y definir cómo reportar claves que falten; no se debe aceptar silenciosamente un idioma inválido proveniente de `localStorage`.
+Así, `t('nav.home')` equivale a buscar `translations[language].nav.home`. Si no existe la clave, `t()` devuelve la clave recibida, por ejemplo `nav.home`, para que la referencia faltante sea visible durante el desarrollo. `setLanguage()` rechaza idiomas que no estén definidos en el diccionario. Si `localStorage` contiene un valor no admitido, la aplicación comienza en español.
 
-El contexto propuesto también:
+El contexto también:
 
 - Lee la preferencia guardada en `localStorage` al iniciar.
 - Guarda la selección cuando cambia.
@@ -117,7 +105,7 @@ El contexto propuesto también:
 
 ## Integración en la aplicación
 
-El Provider debe envolver los componentes que necesitan consultar traducciones. En este proyecto, la integración se hará dentro de `BrowserRouter`, manteniendo el orden y el comportamiento existentes:
+El Provider envuelve los componentes que necesitan consultar traducciones. Está integrado dentro de `BrowserRouter`, manteniendo el orden y el comportamiento existentes:
 
 ```jsx
 <BrowserRouter>
@@ -133,7 +121,7 @@ El Provider debe envolver los componentes que necesitan consultar traducciones. 
 </BrowserRouter>
 ```
 
-La ubicación bajo `BrowserRouter` preserva el acceso de Navbar y Footer a los hooks de React Router, además de dar acceso al idioma a las rutas y sus páginas.
+La ubicación bajo `BrowserRouter` preserva el acceso de Navbar y Footer a los hooks de React Router, además de dar acceso al idioma a las rutas y sus páginas. El Navbar todavía no usa el contexto en la fase 1; eso corresponde a la fase 2.
 
 ## Navbar: primer uso del diccionario
 
@@ -186,13 +174,13 @@ Cada fase debe terminar con una revisión y una validación antes del commit. No
 
 | Fase | Alcance | Commit sugerido |
 |---|---|---|
-| 1. Base del idioma | Crear `src/i18n/translations.js` y `src/i18n/LanguageContext.jsx`; integrar `LanguageProvider` en `src/App.jsx`. | `feat: add language context and translation dictionary` |
+| 1. Base del idioma | ✅ Crear `src/i18n/translations.js` y `src/i18n/LanguageContext.jsx`; integrar `LanguageProvider` en `src/App.jsx`. | `feat: add language context and translation dictionary` |
 | 2. Navbar | Usar traducciones para etiquetas, accesibilidad y ubicación; agregar el selector ES/EN; probar navegación y preferencia persistida. | `feat: use language selector in navbar` |
 | 3. Inicio | Migrar Hero, llamadas a la acción (CTA), servicios y testimonios. | `feat: translate landing page texts` |
 | 4. Footer y formularios | Migrar Footer, etiquetas, botones, validaciones y mensajes de estado. | `feat: translate footer and forms` |
 | 5. Portugués | Completar y habilitar traducciones PT en las secciones ya migradas, y ampliar el selector. | `feat: add portuguese translations` |
 
-La fase 5 representa el alcance futuro compartido. Antes de dar por completo un idioma, hay que comprobar que todas las secciones ya migradas tienen sus claves en ese idioma.
+La fase 1 está implementada; el commit sugerido es una propuesta y todavía debe crearlo la persona desarrolladora. Las fases 2 a 5 son trabajo futuro. Antes de dar por completo un idioma, hay que comprobar que todas las secciones ya migradas tienen sus claves en ese idioma.
 
 ## Superficies identificadas para traducir
 
@@ -215,18 +203,19 @@ La organización actual observada en el repositorio es:
 - `src/components/layout/Footer.jsx`: migración prevista en la fase 4.
 - `src/features/landing/`: secciones de la página principal previstas en la fase 3.
 - `src/pages/` y `src/features/`: páginas y funcionalidades que se revisarán para las fases siguientes.
-- `src/i18n/`: carpeta propuesta; todavía debe crearse al comenzar la fase 1.
+- `src/i18n/translations.js`: diccionario inicial de español e inglés.
+- `src/i18n/LanguageContext.jsx`: estado, persistencia, atributo `lang`, función `t()` y hook `useLanguage()`.
 
 ## Criterios de comprobación
 
 Al cerrar las fases correspondientes, comprobar:
 
-1. La aplicación inicia en español si no existe una preferencia válida.
-2. El control alterna ES/EN y los textos migrados cambian sin recargar la página.
-3. Una recarga conserva el idioma seleccionado.
+1. La fase 1 valida que la aplicación inicie en español si no existe una preferencia válida.
+2. Desde código, `setLanguage('en')` cambia el idioma compartido; el selector del Navbar y los textos visibles se implementarán en fases posteriores.
+3. Una recarga conserva el idioma guardado en `localStorage`.
 4. `document.documentElement.lang` coincide con el idioma activo.
-5. El menú, los enlaces, la ubicación, las rutas y los estilos actuales del Navbar siguen funcionando.
-6. Los formularios conservan su comportamiento y muestran errores y confirmaciones en el idioma seleccionado una vez que se migren.
+5. `useLanguage()` produce un error claro si se usa fuera de `LanguageProvider`.
+6. `setLanguage()` rechaza idiomas no definidos en el diccionario.
 7. El build de producción termina correctamente.
 
 ## Registro de decisiones de aprendizaje
