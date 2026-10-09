@@ -14,6 +14,9 @@ export const rules = {
   },
   email: (v) => {
     if (!v.trim()) return 'Ingresa tu email'
+    if (!v.includes('@')) return 'El email debe incluir @'
+    const domain = v.split('@')[1] || ''
+    if (!domain.includes('.')) return 'El email debe incluir un dominio (ej: .com)'
     if (!EMAIL_REGEX.test(v)) return 'Email inválido (ej: nombre@dominio.com)'
     return null
   },

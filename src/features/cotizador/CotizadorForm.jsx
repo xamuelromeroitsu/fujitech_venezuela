@@ -70,14 +70,13 @@ export default function CotizadorForm() {
   })
 
   async function handleNext() {
-    const partial = { ...values }
-    const errs = validate(partial)
+    const errs = validate(values)
     const relevant = paso === 0
       ? ['nombre', 'email', 'telefono', 'edificio']
-      : paso === 1 ? ['tipoInmueble', 'servicio'] : []
+      : paso === 1 ? ['tipoInmueble', 'servicio', 'paradas'] : []
     const next = {}
     relevant.forEach((k) => { if (errs[k]) next[k] = errs[k] })
-    if (Object.keys(next).length > 0) { setErrors(next); return }
+    if (Object.keys(next).length > 0) { setErrors(errs); return }
     setPaso((p) => Math.min(p + 1, PASOS.length - 1))
   }
 

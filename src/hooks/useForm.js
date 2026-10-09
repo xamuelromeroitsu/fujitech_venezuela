@@ -72,5 +72,5 @@ export function useForm({ initialValues = {}, validate = () => ({}), onSubmit })
     setErrors({})
   }
 
-  return { values, errors, setValues, handleChange, setValue, handleSubmit, isSubmitting, reset }
+  return { values, errors, setValues, setErrors, handleChange, setValue, handleSubmit, isSubmitting, reset }
 }
