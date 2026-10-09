@@ -3,6 +3,7 @@ import { useForm } from '../../hooks/useForm'
 import { insertRow } from '../../lib/supabaseClient'
 import { rules } from '../../lib/validators'
 import Button from '../../components/ui/Button'
+import SkeletonCard from '../../components/ui/SkeletonCard'
 import Input from '../../components/ui/Input'
 import FormSuccess from '../../components/form/FormSuccess'
 import ChipGroup from '../../components/form/ChipGroup'
@@ -115,8 +116,10 @@ export default function EmpleoForm() {
       </div>
 
       <FormError error={errors._form} />
+  {/* El bloque acompana el envio; los datos y el boton deshabilitado siguen visibles. */}
+      {isSubmitting && <SkeletonCard compact label="Enviando postulación" />}
       <Button type="submit" disabled={isSubmitting} size="lg">
-        {isSubmitting ? 'Enviando...' : 'Postularme en menos de un minuto'}
+        {isSubmitting ? 'Enviando postulación...' : 'Postularme en menos de un minuto'}
       </Button>
     </form>
   )

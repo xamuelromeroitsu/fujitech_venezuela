@@ -3,6 +3,7 @@ import { useForm } from '../../hooks/useForm'
 import { insertRow } from '../../lib/supabaseClient'
 import { rules } from '../../lib/validators'
 import Button from '../../components/ui/Button'
+import SkeletonCard from '../../components/ui/SkeletonCard'
 import Input from '../../components/ui/Input'
 import FormSuccess from '../../components/form/FormSuccess'
 import ChipGroup from '../../components/form/ChipGroup'
@@ -164,10 +165,12 @@ export default function CotizadorForm() {
           <Button type="button" onClick={handleNext}>Continuar →</Button>
         ) : (
           <Button type="submit" disabled={isSubmitting} size="lg">
-            {isSubmitting ? 'Enviando...' : 'Solicitar propuesta'}
+            {isSubmitting ? 'Enviando solicitud...' : 'Solicitar propuesta'}
           </Button>
         )}
       </div>
+      {/* Se conserva el formulario visible y se indica la espera sin permitir otro envio. */}
+      {isSubmitting && <SkeletonCard compact label="Enviando solicitud de cotización" />}
     </form>
   )
 }

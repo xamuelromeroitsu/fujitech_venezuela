@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { insertRow } from '../../lib/supabaseClient'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
+import SkeletonCard from '../../components/ui/SkeletonCard'
 import { IconShieldCheck, IconAlertTriangle, IconClock } from '../../components/icons'
 import './IprChecker.css'
 
@@ -21,6 +22,8 @@ export default function IprChecker() {
   const [rae, setRae] = useState('')
   const [resultado, setResultado] = useState(null)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [requestError, setRequestError] = useState('')
 
   async function handleCheck(e) {
     e.preventDefault()
@@ -31,10 +34,20 @@ export default function IprChecker() {
       return
     }
     setError('')
+    setRequestError('')
     setResultado(null)
-    await insertRow('solicitudes_ipr', { rae: raeLimpio, estado: 'consultado' })
-    const dias = diasRestantes(Date.now() + 45 * 24 * 60 * 60 * 1000)
-    setResultado(evaluar(dias))
+    // El skeleton representa el resultado mientras responde la escritura remota.
+    setLoading(true)
+    try {
+      await insertRow('solicitudes_ipr', { rae: raeLimpio, estado: 'consultado' })
+      const dias = diasRestantes(Date.now() + 45 * 24 * 60 * 60 * 1000)
+      setResultado(evaluar(dias))
+    } catch {
+      setRequestError('No se pudo completar la consulta. Inténtalo de nuevo.')
+    } finally {
+      // Garantiza que la espera termine tanto en exito como en error.
+      setLoading(false)
+    }
   }
 
   return (
@@ -44,12 +57,16 @@ export default function IprChecker() {
           label="Número de Registro del Ascensor (RAE) o dirección del edificio"
           name="rae"
           value={rae}
-          onChange={(e) => { setRae(e.target.value); setError('') }}
+          onChange={(e) => { setRae(e.target.value); setError(''); setRequestError('') }}
           error={error}
           hint="Ej.: RAE-000123 o Av. Principal, Torre Central"
           required
         />
-        <Button type="submit">Consultar estado</Button>
+        {loading && <SkeletonCard label="Consultando estado IPR" />}
+        {requestError && <p className="field__error" role="alert">{requestError}</p>}
+        <Button type="submit" disabled={loading}>
+          {loading ? 'Consultando...' : 'Consultar estado'}
+        </Button>
       </form>
 
       {resultado && (

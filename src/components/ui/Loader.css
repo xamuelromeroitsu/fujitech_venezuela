@@ -1,0 +1,68 @@
+.loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--color-surface, #fff);
+}
+
+.loader__mark {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  border: 1px solid var(--color-line, #e5e7eb);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(15, 18, 24, 0.08));
+  transform-origin: center;
+  animation: loader-bounce 1s ease-in-out infinite;
+}
+
+.loader__mark img {
+  display: block;
+  width: 48%;
+  height: 48%;
+  object-fit: contain;
+  animation: loader-letter 1s ease-in-out infinite;
+}
+
+.loader__mark--sm { width: 28px; height: 28px; }
+.loader__mark--md { width: 56px; height: 56px; }
+.loader__mark--lg { width: 76px; height: 76px; }
+
+/* El medallon salta y se comprime al aterrizar; la letra acompana el impacto. */
+@keyframes loader-bounce {
+  0%, 100% { transform: translateY(0) scaleX(1) scaleY(1); }
+  30% { transform: translateY(-9px) scaleX(0.96) scaleY(1.04); }
+  55% { transform: translateY(0) scaleX(1.18) scaleY(0.78); }
+  70% { transform: translateY(-2px) scaleX(0.98) scaleY(1.02); }
+  82% { transform: translateY(0) scaleX(1.05) scaleY(0.96); }
+}
+
+@keyframes loader-letter {
+  0%, 100% { transform: scale(1); }
+  55% { transform: scale(0.78); }
+  70% { transform: scale(0.9); }
+}
+
+.loader__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+/* Mantiene visible la marca sin movimiento para usuarios con movimiento reducido. */
+@media (prefers-reduced-motion: reduce) {
+  .loader__mark,
+  .loader__mark img { animation: none; }
+}

@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from '../pages/Home'
+import Loader from '../components/ui/Loader'
+import PageSkeleton from '../components/ui/PageSkeleton'
 
 /**
  * Lazy loading: cada página se descarga SOLO cuando el usuario visita esa URL.
@@ -11,10 +13,6 @@ const CotizarPage = lazy(() => import('../pages/CotizarPage'))
 const IprPage = lazy(() => import('../pages/IprPage'))
 const EmpleoPage = lazy(() => import('../pages/EmpleoPage'))
 const AdminDashboard = lazy(() => import('../pages/AdminDashboard'))
-
-function PageLoader() {
-  return <div className="page-loader">Cargando…</div>
-}
 
 /**
  * Rutas del sitio:
@@ -27,15 +25,15 @@ function PageLoader() {
  */
 export default function AppRoutes() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/cotizar" element={<CotizarPage />} />
-        <Route path="/ipr" element={<IprPage />} />
-        <Route path="/empleo" element={<EmpleoPage />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      {/* Fallbacks separados para conservar una silueta acorde con cada pagina. */}
+      <Route path="/cotizar" element={<Suspense fallback={<PageSkeleton variant="cotizador" />}><CotizarPage /></Suspense>} />
+      <Route path="/ipr" element={<Suspense fallback={<PageSkeleton variant="ipr" />}><IprPage /></Suspense>} />
+      <Route path="/empleo" element={<Suspense fallback={<PageSkeleton variant="empleo" />}><EmpleoPage /></Suspense>} />
+      {/* Admin aun no tiene contenido de datos; conserva el loader de marca. */}
+      <Route path="/admin" element={<Suspense fallback={<Loader fullscreen />}><AdminDashboard /></Suspense>} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
