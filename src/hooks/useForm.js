@@ -61,7 +61,9 @@ export function useForm({ initialValues = {}, validate = () => ({}), onSubmit })
       await onSubmit(values)
       return { ok: true, values }
     } catch (err) {
-      return { ok: false, errors: { _form: err.message || 'Error inesperado' } }
+      const msg = err.message || 'Error inesperado'
+      setErrors({ _form: msg })
+      return { ok: false, errors: { _form: msg } }
     } finally {
       setIsSubmitting(false)
     }

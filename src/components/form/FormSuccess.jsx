@@ -2,7 +2,7 @@ import Button from '../ui/Button'
 import { IconShieldCheck } from '../icons'
 import './FormSuccess.css'
 
-export default function FormSuccess({ nombre, titulo, mensaje, textoBoton = 'Nueva solicitud', onReset }) {
+export default function FormSuccess({ nombre, titulo, mensaje, textoBoton, onReset }) {
   return (
     <div className="form-success" role="status">
       <div className="form-success__icon">
@@ -10,7 +10,9 @@ export default function FormSuccess({ nombre, titulo, mensaje, textoBoton = 'Nue
       </div>
       <h3 className="form-success__title">{titulo}</h3>
       <p className="form-success__message">Gracias, {nombre}. {mensaje}</p>
-      <Button variant="outline" onClick={onReset}>{textoBoton}</Button>
+      {onReset && textoBoton && (
+        <Button variant="outline" onClick={onReset}>{textoBoton}</Button>
+      )}
     </div>
   )
 }

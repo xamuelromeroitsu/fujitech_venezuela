@@ -86,8 +86,6 @@ export default function CotizadorForm() {
         nombre={values.nombre}
         titulo="Solicitud recibida"
         mensaje="Un asesor Fujitec te contactará en menos de 24 horas hábiles."
-        textoBoton="Nueva solicitud"
-        onReset={() => { setEnviado(false); setPaso(0) }}
       />
     )
   }
@@ -162,11 +160,6 @@ export default function CotizadorForm() {
       )}
 
       <div className="cotizador__nav">
-        {paso > 0 && (
-          <Button type="button" variant="ghost" onClick={() => setPaso((p) => p - 1)}>
-            ← Atrás
-          </Button>
-        )}
         {paso < PASOS.length - 1 ? (
           <Button type="button" onClick={handleNext}>Continuar →</Button>
         ) : (

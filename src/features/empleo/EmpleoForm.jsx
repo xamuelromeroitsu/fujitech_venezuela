@@ -43,7 +43,7 @@ function validate(v) {
 
 export default function EmpleoForm() {
   const [enviado, setEnviado] = useState(false)
-  const { values, errors, handleChange, handleSubmit, isSubmitting, setValue } = useForm({
+  const { values, errors, handleChange, handleSubmit, isSubmitting, setValue, reset } = useForm({
     initialValues: INICIAL,
     validate,
     onSubmit: async (v) => {
@@ -66,7 +66,7 @@ export default function EmpleoForm() {
         titulo="Postulación recibida"
         mensaje="Tu CV quedó en nuestro banco de talento."
         textoBoton="Nueva postulación"
-        onReset={() => { setEnviado(false) }}
+        onReset={() => { reset(); setEnviado(false) }}
       />
     )
   }
