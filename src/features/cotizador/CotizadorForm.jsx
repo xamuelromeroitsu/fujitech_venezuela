@@ -112,7 +112,7 @@ export default function CotizadorForm() {
       )}
 
       {paso === 1 && (
-        <div className="cotizador__step" data-reveal>
+        <div className="cotizador__step">
           <ChipGroup label="Tipo de inmueble" options={TIPOS_INMUEBLE} value={values.tipoInmueble} onChange={(v) => setValue('tipoInmueble', v)} error={errors.tipoInmueble} />
           <ChipGroup label="Servicio que necesitas" options={SERVICIOS} value={values.servicio} onChange={(v) => setValue('servicio', v)} />
           <Input
@@ -130,7 +130,7 @@ export default function CotizadorForm() {
       )}
 
       {paso === 2 && (
-        <div className="cotizador__step" data-reveal>
+        <div className="cotizador__step">
           <fieldset className="cotizador__coberturas" aria-label="Nivel de cobertura">
             <legend className="visually-hidden">Selecciona nivel de cobertura</legend>
             {COBERTURAS.map((c) => (
