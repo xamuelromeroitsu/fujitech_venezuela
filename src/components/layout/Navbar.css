@@ -193,4 +193,9 @@
   .navbar__link--active {
     color: var(--color-primary);
   }
+
+  .navbar__menu .language-sling {
+    align-self: flex-start;
+    margin-top: var(--space-3);
+  }
 }

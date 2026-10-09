@@ -1,7 +1,7 @@
 # Internacionalización (i18n)
 
-> **Estado:** fase 1 implementada; el selector y las traducciones visibles se agregarán en las fases siguientes.
-> **Alcance inicial:** español e inglés. Portugués queda documentado como una ampliación posterior.
+> **Estado:** fase 2 implementada con ReactBits Sling Button. El selector recorre español, inglés y portugués; las demás secciones aún no están traducidas.
+> **Alcance:** la traducción del contenido se incorporará gradualmente, feature por feature.
 
 Esta guía reúne las decisiones y ejemplos conversados para agregar cambio de idioma a Fujitec Venezuela poco a poco, entendiendo cada parte y manteniendo cambios pequeños que se puedan revisar y confirmar con commits separados.
 
@@ -14,7 +14,7 @@ La estrategia propuesta para este proyecto es:
 1. Guardar las traducciones en diccionarios organizados por idioma y sección.
 2. Mantener el idioma seleccionado en un contexto de React compartido.
 3. Consultar cada texto mediante una función `t()` y una clave como `nav.home`.
-4. Ofrecer un control de idioma en el Navbar.
+4. Ofrecer un control de idioma en el Navbar mediante Sling Button de ReactBits.
 5. Migrar los textos de la interfaz gradualmente, feature por feature.
 
 Al final, los componentes no deberían tener que decidir por su cuenta qué idioma mostrar. Reciben el texto del diccionario para el idioma activo.
@@ -39,7 +39,7 @@ translations.es.nav.home // "Inicio"
 translations.en.nav.home // "Home"
 ```
 
-El diccionario implementado en `src/i18n/translations.js` contiene español e inglés:
+El diccionario implementado en `src/i18n/translations.js` contiene las etiquetas de navegación y los textos accesibles del selector en español, inglés y portugués:
 
 ```js
 export const translations = {
@@ -54,6 +54,15 @@ export const translations = {
     footer: {
       contact: 'Contacto',
     },
+    language: {
+      change: 'Cambiar idioma',
+      next: 'Siguiente idioma',
+      names: {
+        es: 'Español',
+        en: 'Inglés',
+        pt: 'Portugués',
+      },
+    },
   },
   en: {
     nav: {
@@ -66,11 +75,41 @@ export const translations = {
     footer: {
       contact: 'Contact',
     },
+    language: {
+      change: 'Change language',
+      next: 'Next language',
+      names: {
+        es: 'Spanish',
+        en: 'English',
+        pt: 'Portuguese',
+      },
+    },
+  },
+  pt: {
+    nav: {
+      home: 'Início',
+      quote: 'Solicitar orçamento',
+      ipr: 'Status IPR',
+      jobs: 'Trabalhe conosco',
+      location: 'Localização',
+    },
+    footer: {
+      contact: 'Contato',
+    },
+    language: {
+      change: 'Mudar idioma',
+      next: 'Próximo idioma',
+      names: {
+        es: 'Espanhol',
+        en: 'Inglês',
+        pt: 'Português',
+      },
+    },
   },
 }
 ```
 
-Portugués (`pt`) apareció en la propuesta inicial, pero no está habilitado ni implementado. Su incorporación se reserva para la fase 5, después de traducir y probar las secciones acordadas.
+El selector habilita los tres idiomas para las etiquetas del Navbar. Esto no significa que todo el contenido del sitio esté traducido: la migración de las demás secciones sigue siendo trabajo futuro.
 
 Las traducciones se amplían por sección. Por ejemplo, la landing podría tener `landing.hero.title` y el pie de página `footer.contact`. Conviene mantener una estructura equivalente en cada idioma para que todas las claves se puedan resolver.
 
@@ -121,9 +160,9 @@ El Provider envuelve los componentes que necesitan consultar traducciones. Está
 </BrowserRouter>
 ```
 
-La ubicación bajo `BrowserRouter` preserva el acceso de Navbar y Footer a los hooks de React Router, además de dar acceso al idioma a las rutas y sus páginas. El Navbar todavía no usa el contexto en la fase 1; eso corresponde a la fase 2.
+La ubicación bajo `BrowserRouter` preserva el acceso de Navbar y Footer a los hooks de React Router, además de dar acceso al idioma a las rutas y sus páginas. El Navbar consume el contexto desde la fase 2 para traducir sus etiquetas y controlar el selector.
 
-## Navbar: primer uso del diccionario
+## Navbar: selector Sling Button cíclico de idioma
 
 El Navbar será el primer componente migrado. Las etiquetas actuales corresponden a estas claves:
 
@@ -135,7 +174,7 @@ El Navbar será el primer componente migrado. Las etiquetas actuales corresponde
 | Trabaja con nosotros | `nav.jobs` |
 | Ubicación | `nav.location` |
 
-En vez de declarar etiquetas fijas, el componente construirá sus enlaces usando `t()`:
+El Navbar construye sus enlaces usando `t()`:
 
 ```jsx
 const LINKS = [
@@ -146,13 +185,15 @@ const LINKS = [
 ]
 ```
 
-El control de idioma inicial puede alternar entre español e inglés:
+`src/components/layout/LanguageSling.jsx` conecta el Sling Button de ReactBits al contexto. Muestra el código del idioma activo y avanza al siguiente al presionarlo o al completar el gesto de arrastre:
 
 ```jsx
-setLanguage(language === 'es' ? 'en' : 'es')
+const LANGUAGES = ['es', 'en', 'pt']
+const nextLanguage = LANGUAGES[(currentLanguageIndex + 1) % LANGUAGES.length]
+setLanguage(nextLanguage)
 ```
 
-Debe añadirse al Navbar existente sin reemplazar sus clases CSS, navegación móvil, enlace a ubicación ni comportamiento de scroll. Un control más adelante podría ser un selector si se habilitan tres o más idiomas.
+El ciclo es `ES → EN → PT → ES`. Sling Button aporta el estiramiento y retroceso elástico, y respeta la preferencia del sistema por movimiento reducido. El callback `onSend` realiza el cambio de idioma, mientras `ariaLabel` y la instrucción accesible se localizan con el idioma actual. El selector se añade al Navbar existente sin reemplazar su navegación móvil, el enlace a ubicación ni el comportamiento de scroll.
 
 ## Vocabulario técnico
 
@@ -175,12 +216,12 @@ Cada fase debe terminar con una revisión y una validación antes del commit. No
 | Fase | Alcance | Commit sugerido |
 |---|---|---|
 | 1. Base del idioma | ✅ Crear `src/i18n/translations.js` y `src/i18n/LanguageContext.jsx`; integrar `LanguageProvider` en `src/App.jsx`. | `feat: add language context and translation dictionary` |
-| 2. Navbar | Usar traducciones para etiquetas, accesibilidad y ubicación; agregar el selector ES/EN; probar navegación y preferencia persistida. | `feat: use language selector in navbar` |
+| 2. Navbar | ✅ Traducir etiquetas, accesibilidad y ubicación; integrar ReactBits Sling Button con ciclo ES → EN → PT; probar navegación y preferencia persistida. | `feat: use language selector in navbar` |
 | 3. Inicio | Migrar Hero, llamadas a la acción (CTA), servicios y testimonios. | `feat: translate landing page texts` |
 | 4. Footer y formularios | Migrar Footer, etiquetas, botones, validaciones y mensajes de estado. | `feat: translate footer and forms` |
-| 5. Portugués | Completar y habilitar traducciones PT en las secciones ya migradas, y ampliar el selector. | `feat: add portuguese translations` |
+| 5. Portugués | Completar y probar las traducciones PT del contenido migrado; el selector ya incluye PT. | `feat: add portuguese translations` |
 
-La fase 1 está implementada; el commit sugerido es una propuesta y todavía debe crearlo la persona desarrolladora. Las fases 2 a 5 son trabajo futuro. Antes de dar por completo un idioma, hay que comprobar que todas las secciones ya migradas tienen sus claves en ese idioma.
+Las fases 1 y 2 están implementadas; los commits sugeridos son propuestas y todavía debe crearlos la persona desarrolladora. Las fases 3 a 5 son trabajo futuro. Antes de dar por completo un idioma, hay que comprobar que todas las secciones ya migradas tienen sus claves en ese idioma.
 
 ## Superficies identificadas para traducir
 
@@ -199,7 +240,10 @@ El objetivo no es traducir identificadores de código, rutas o datos que deban c
 La organización actual observada en el repositorio es:
 
 - `src/App.jsx`: raíz de la aplicación; integra el provider.
-- `src/components/layout/Navbar.jsx`: primer componente con selector y etiquetas traducidas.
+- `src/components/layout/Navbar.jsx`: integra las etiquetas traducidas y `LanguageSling`.
+- `src/components/layout/LanguageSling.jsx`: conecta Sling Button, el ciclo de idiomas y las etiquetas accesibles.
+- `src/components/ui/SlingButton.jsx` y `SlingButton.css`: componente de ReactBits y sus estilos.
+- `src/components/ui/SlingButton.LICENSE.md`: atribución y condiciones de licencia del componente.
 - `src/components/layout/Footer.jsx`: migración prevista en la fase 4.
 - `src/features/landing/`: secciones de la página principal previstas en la fase 3.
 - `src/pages/` y `src/features/`: páginas y funcionalidades que se revisarán para las fases siguientes.
@@ -210,8 +254,8 @@ La organización actual observada en el repositorio es:
 
 Al cerrar las fases correspondientes, comprobar:
 
-1. La fase 1 valida que la aplicación inicie en español si no existe una preferencia válida.
-2. Desde código, `setLanguage('en')` cambia el idioma compartido; el selector del Navbar y los textos visibles se implementarán en fases posteriores.
+1. La aplicación inicia en español si no existe una preferencia válida.
+2. El botón circular recorre ES → EN → PT → ES y actualiza las etiquetas del Navbar.
 3. Una recarga conserva el idioma guardado en `localStorage`.
 4. `document.documentElement.lang` coincide con el idioma activo.
 5. `useLanguage()` produce un error claro si se usa fuera de `LanguageProvider`.
@@ -221,7 +265,7 @@ Al cerrar las fases correspondientes, comprobar:
 ## Registro de decisiones de aprendizaje
 
 - Se avanzará de forma incremental para poder entender cada parte y separar el trabajo en commits pequeños.
-- El primer objetivo funcional es ES/EN; PT está contemplado, pero se implementará después.
+- Sling Button permite recorrer ES/EN/PT; el contenido general del sitio se traduce gradualmente.
 - Las claves se organizarán por sección, por ejemplo `nav.home` y `footer.contact`.
 - La experiencia de idioma se centraliza en contexto para evitar duplicar estado en cada componente.
 - Cambiar el idioma solo afectará los textos migrados. El resto seguirá en su idioma actual hasta completar su fase.

@@ -2,20 +2,22 @@ import { useState, useEffect } from 'react'
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import useHideOnScroll from '../../hooks/useHideOnScroll'
 import { IconMapPin } from '../icons'
+import LanguageSling from './LanguageSling'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './Navbar.css'
-
-const LINKS = [
-  { to: '/', label: 'Inicio' },
-  { to: '/cotizar', label: 'Cotizar' },
-  { to: '/ipr', label: 'Semáforo IPR' },
-  { to: '/empleo', label: 'Trabaja con nosotros' },
-]
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const hidden = useHideOnScroll()
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useLanguage()
+  const links = [
+    { to: '/', label: t('nav.home') },
+    { to: '/cotizar', label: t('nav.quote') },
+    { to: '/ipr', label: t('nav.ipr') },
+    { to: '/empleo', label: t('nav.jobs') },
+  ]
 
   const navigateToLocation = () => {
     setOpen(false)
@@ -60,7 +62,7 @@ export default function Navbar() {
         </button>
 
         <nav id="navbar-menu" className={`navbar__menu ${open ? 'navbar__menu--open' : ''}`}>
-          {LINKS.map((link) => (
+          {links.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
@@ -73,8 +75,9 @@ export default function Navbar() {
           ))}
           <button type="button" className="navbar__link navbar__location-link" onClick={navigateToLocation}>
             <IconMapPin size={16} strokeWidth={2} />
-            Ubicación
+            {t('nav.location')}
           </button>
+          <LanguageSling />
         </nav>
       </div>
     </header>
