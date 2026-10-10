@@ -142,6 +142,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .location__hours {
+    grid-column: 1 / -1;
+  }
+
   .location__map-wrapper {
     height: 400px;
   }
