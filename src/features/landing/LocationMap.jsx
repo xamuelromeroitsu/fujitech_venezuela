@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import { useEffect } from 'react'
 import L from 'leaflet'
 import { IconBuilding2, IconPhone, IconMail, IconMapPin } from '../../components/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './LocationMap.css'
 
 const FUJITEC_COORDS = [10.4932769, -66.8103574]
@@ -26,59 +27,62 @@ function MapController() {
 }
 
 export default function LocationMap() {
+  const { t } = useLanguage()
+
   return (
     <section className="location" id="ubicacion" aria-labelledby="location-title" data-reveal>
       <div className="container">
         <div className="location__grid">
           <div className="location__info">
             <h2 id="location-title" className="location__title">
-              ¿Dónde encontrarnos?
+              {t('landing.location.title')}
             </h2>
             <p className="location__subtitle">
-              Nuestra sede en La Urbina, Caracas. Ven a visitarnos o contáctanos por teléfono y correo.
+              {t('landing.location.subtitle')}
             </p>
 
-            <address className="location__address">
-              <div className="location__address-item">
+            <div className="location__details">
+              <address className="location__address-item location__address location__detail">
                 <IconMapPin size={20} strokeWidth={1.8} aria-hidden="true" />
                 <div>
-                  <strong>Dirección</strong>
-                  <span>
-                    Edificio Luindos, Planta Baja, Local 1<br />
-                    Calle 8 con Calle 6, Urbanización La Urbina<br />
-                    Caracas, Venezuela
-                  </span>
+                  <strong>{t('landing.location.address')}</strong>
+                  <span>{t('landing.location.addressLines')}</span>
                 </div>
-              </div>
+              </address>
 
-              <div className="location__address-item">
+              <div className="location__address-item location__detail">
                 <IconPhone size={20} strokeWidth={1.8} aria-hidden="true" />
                 <div>
-                  <strong>Teléfonos</strong>
-                  <a href="tel:+582122410311">+58 212 241 03 11</a>
+                  <strong>{t('landing.location.phones')}</strong>
+                  <a href="tel:+582122410311">{t('landing.location.phone')}</a>
                 </div>
               </div>
 
-              <div className="location__address-item">
+              <div className="location__address-item location__detail">
                 <IconMail size={20} strokeWidth={1.8} aria-hidden="true" />
                 <div>
-                  <strong>Email</strong>
-                  <a href="mailto:info@fujitec.com.ve">info@fujitec.com.ve</a>
+                  <strong>{t('landing.location.email')}</strong>
+                  <a href="mailto:info@fujitec.com.ve">{t('landing.location.emailAddress')}</a>
                 </div>
               </div>
-            </address>
 
-            <div className="location__hours">
-              <IconBuilding2 size={20} strokeWidth={1.8} aria-hidden="true" />
-              <div>
-                <strong>Horario de atención</strong>
-                <span>Lunes a Viernes: 8:00 AM – 5:00 PM</span>
-                <span>Emergencias 24/7: Línea directa</span>
+              <div className="location__hours location__detail">
+                <IconBuilding2 size={20} strokeWidth={1.8} aria-hidden="true" />
+                <div>
+                  <strong>{t('landing.location.hours')}</strong>
+                  <span>{t('landing.location.weekdayHours')}</span>
+                  <span>{t('landing.location.emergencyHours')}</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="location__map-wrapper" role="application" aria-label="Mapa de ubicación Fujitec Venezuela en La Urbina, Caracas" tabIndex={0}>
+          <div
+            className="location__map-wrapper"
+            role="application"
+            aria-label={t('landing.location.mapLabel')}
+            tabIndex={0}
+          >
             <MapContainer
               center={FUJITEC_COORDS}
               zoom={ZOOM_LEVEL}
@@ -94,7 +98,7 @@ export default function LocationMap() {
               <Marker position={FUJITEC_COORDS} icon={redIcon}>
                 <Popup>
                   <strong>Fujitec Venezuela</strong><br />
-                  Edificio Luindos, Planta Baja, Local 1<br />
+                  {t('landing.location.mapAddress')}<br />
                 </Popup>
               </Marker>
             </MapContainer>

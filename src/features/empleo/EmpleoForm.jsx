@@ -10,15 +10,16 @@ import ChipGroup from '../../components/form/ChipGroup'
 import PersonalDataFields from '../../components/form/PersonalDataFields'
 import FormError from '../../components/form/FormError'
 import { IconArrowUp } from '../../components/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './EmpleoForm.css'
 
 const MANIOBRAS = [
-  'Ajustes electromecánicos',
-  'Controladores / tableros',
-  'Seguridad y paracaídas',
-  'Hidráulicos',
-  'Escaleras mecánicas',
-  'Modernización de grupos',
+  { value: 'Ajustes electromecánicos', key: 'adjustments' },
+  { value: 'Controladores / tableros', key: 'controllers' },
+  { value: 'Seguridad y paracaídas', key: 'safety' },
+  { value: 'Hidráulicos', key: 'hydraulic' },
+  { value: 'Escaleras mecánicas', key: 'escalators' },
+  { value: 'Modernización de grupos', key: 'modernization' },
 ]
 
 const INICIAL = {
@@ -31,22 +32,26 @@ const INICIAL = {
   cv: null,
 }
 
-function validate(v) {
+function validate(v, t) {
   const errors = {}
-  const n = rules.nombre(v.nombre); if (n) errors.nombre = n
-  const e = rules.email(v.email); if (e) errors.email = e
-  const t = rules.telefono(v.telefono); if (t) errors.telefono = t
-  if (v.anios && (Number(v.anios) < 0 || Number(v.anios) > 60)) errors.anios = 'Años inválidos'
-  if (v.maniobras.length === 0) errors.maniobras = 'Selecciona al menos una maniobra'
-  const cv = rules.archivoCV(v.cv); if (cv) errors.cv = cv
+  const nameError = rules.nombre(v.nombre, t); if (nameError) errors.nombre = nameError
+  const emailError = rules.email(v.email, t); if (emailError) errors.email = emailError
+  const phoneError = rules.telefono(v.telefono, t); if (phoneError) errors.telefono = phoneError
+  if (v.anios && (Number(v.anios) < 0 || Number(v.anios) > 60)) errors.anios = t('forms.validation.years')
+  if (v.maniobras.length === 0) errors.maniobras = t('forms.validation.maneuvers')
+  const cvError = rules.archivoCV(v.cv, t); if (cvError) errors.cv = cvError
   return errors
 }
 
 export default function EmpleoForm() {
+  const { t } = useLanguage()
   const [enviado, setEnviado] = useState(false)
   const { values, errors, handleChange, handleSubmit, isSubmitting, setValue, reset } = useForm({
     initialValues: INICIAL,
-    validate,
+    validate: (formValues) => validate(formValues, t),
+    getErrorMessage: (error) => t('forms.validation.submit', {
+      details: error?.message || t('forms.validation.unexpected'),
+    }),
     onSubmit: async (v) => {
       await insertRow('candidatos_empleo', {
         nombre: v.nombre,
@@ -64,9 +69,9 @@ export default function EmpleoForm() {
     return (
       <FormSuccess
         nombre={values.nombre}
-        titulo="Postulación recibida"
-        mensaje="Tu CV quedó en nuestro banco de talento."
-        textoBoton="Nueva postulación"
+        titulo={t('forms.employment.successTitle')}
+        mensaje={t('forms.employment.successMessage')}
+        textoBoton={t('forms.employment.reset')}
         onReset={() => { reset(); setEnviado(false) }}
       />
     )
@@ -76,18 +81,28 @@ export default function EmpleoForm() {
     <form className="empleo" onSubmit={(e) => handleSubmit(e).then((r) => { if (r.ok) setEnviado(true) })}>
       <div className="empleo__grid">
         <PersonalDataFields values={values} errors={errors} onChange={handleChange} />
-        <Input label="Ciudad" name="ciudad" value={values.ciudad} onChange={handleChange} />
-        <Input label="Años de experiencia" name="anios" type="number" min="0" max="60" value={values.anios} onChange={handleChange} error={errors.anios} inputMode="numeric" />
+        <Input label={t('forms.employment.city')} name="ciudad" value={values.ciudad} onChange={handleChange} />
+        <Input label={t('forms.employment.years')} name="anios" type="number" min="0" max="60" value={values.anios} onChange={handleChange} error={errors.anios} inputMode="numeric" />
       </div>
 
-      <ChipGroup label="Maniobras que dominas" options={MANIOBRAS} value={values.maniobras} onChange={(v) => setValue('maniobras', v)} multi error={errors.maniobras} />
+      <ChipGroup
+        label={t('forms.employment.skills')}
+        options={MANIOBRAS.map((option) => ({
+          value: option.value,
+          label: t(`forms.employment.maneuvers.${option.key}`),
+        }))}
+        value={values.maniobras}
+        onChange={(v) => setValue('maniobras', v)}
+        multi
+        error={errors.maniobras}
+      />
 
       <div className="empleo__file-upload" data-reveal>
         <label className="empleo__file-label" htmlFor="cv">
           <div className="empleo__file-dropzone" id="dropzone">
             <IconArrowUp size={32} strokeWidth={1.5} className="empleo__file-icon" />
-            <p className="empleo__file-text">Arrastra tu CV aquí o haz clic para seleccionar</p>
-            <p className="empleo__file-hint">PDF o Word (.doc, .docx), máx. 5 MB</p>
+            <p className="empleo__file-text">{t('forms.employment.upload')}</p>
+            <p className="empleo__file-hint">{t('forms.employment.fileHint')}</p>
             <input
               id="cv"
               name="cv"
@@ -109,7 +124,7 @@ export default function EmpleoForm() {
           <div className="empleo__file-selected">
             <span className="empleo__file-name">{values.cv.name}</span>
             <span className="empleo__file-size">{(values.cv.size / 1024 / 1024).toFixed(2)} MB</span>
-            <button type="button" className="empleo__file-remove" onClick={() => setValue('cv', null)} aria-label="Eliminar archivo">×</button>
+            <button type="button" className="empleo__file-remove" onClick={() => setValue('cv', null)} aria-label={t('forms.employment.removeFile')}>×</button>
           </div>
         )}
         {errors.cv && <p className="field__error" role="alert">{errors.cv}</p>}
@@ -117,9 +132,9 @@ export default function EmpleoForm() {
 
       <FormError error={errors._form} />
   {/* El bloque acompana el envio; los datos y el boton deshabilitado siguen visibles. */}
-      {isSubmitting && <SkeletonCard compact label="Enviando postulación" />}
+      {isSubmitting && <SkeletonCard compact label={t('forms.employment.loading')} />}
       <Button type="submit" disabled={isSubmitting} size="lg">
-        {isSubmitting ? 'Enviando postulación...' : 'Postularme en menos de un minuto'}
+        {isSubmitting ? t('forms.employment.submitting') : t('forms.employment.submit')}
       </Button>
     </form>
   )

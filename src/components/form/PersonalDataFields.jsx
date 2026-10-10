@@ -1,4 +1,5 @@
 import Input from '../ui/Input'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 /**
  * PersonalDataFields — Campos de datos personales reutilizables.
@@ -10,11 +11,12 @@ import Input from '../ui/Input'
  *   onChange — Handler de cambios (handleChange de useForm)
  */
 export default function PersonalDataFields({ values, errors, onChange }) {
+  const { t } = useLanguage()
   return (
     <>
-      <Input label="Nombre completo" name="nombre" value={values.nombre} onChange={onChange} error={errors.nombre} pattern="[^\d]*" required />
-      <Input label="Email" name="email" type="email" value={values.email} onChange={onChange} error={errors.email} required />
-      <Input label="Teléfono / WhatsApp" name="telefono" type="tel" maxLength={16} inputMode="numeric" pattern="[+\d\s-]*" value={values.telefono} onChange={onChange} error={errors.telefono} required />
+      <Input label={t('forms.personal.fullName')} name="nombre" value={values.nombre} onChange={onChange} error={errors.nombre} pattern="[^\d]*" required />
+      <Input label={t('forms.personal.email')} name="email" type="email" value={values.email} onChange={onChange} error={errors.email} required />
+      <Input label={t('forms.personal.phone')} name="telefono" type="tel" maxLength={16} inputMode="numeric" pattern="[+\d\s-]*" value={values.telefono} onChange={onChange} error={errors.telefono} required />
     </>
   )
 }

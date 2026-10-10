@@ -18,16 +18,20 @@ export default function ChipGroup({ label, options, value, onChange, multi = fal
     <div className="field">
       <span className="field__label">{label}</span>
       <div className="chip-group">
-        {options.map((opt) => (
-          <button
-            key={opt}
-            type="button"
-            className={`chip-group__chip ${isActive(opt) ? 'chip-group__chip--active' : ''}`}
-            onClick={() => handleClick(opt)}
-          >
-            {opt}
-          </button>
-        ))}
+        {options.map((option) => {
+          const opt = typeof option === 'string' ? option : option.value
+          const labelText = typeof option === 'string' ? option : option.label
+          return (
+            <button
+              key={opt}
+              type="button"
+              className={`chip-group__chip ${isActive(opt) ? 'chip-group__chip--active' : ''}`}
+              onClick={() => handleClick(opt)}
+            >
+              {labelText}
+            </button>
+          )
+        })}
       </div>
       {error && <p className="field__error" role="alert">{error}</p>}
     </div>

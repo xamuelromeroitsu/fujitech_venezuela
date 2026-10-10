@@ -25,11 +25,13 @@ import { useState } from 'react'
  * - `isSubmitting` se activa durante el `await onSubmit` para deshabilitar botones.
  * - No dependes de ninguna librería externa: es solo useState.
  */
-export function useForm({ initialValues = {}, validate = () => ({}), onSubmit }) {
+export function useForm({ initialValues = {}, validate = () => ({}), onSubmit, getErrorMessage }) {
+  // Guarda los datos, los errores y si el envío está en curso.
   const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Actualiza un campo y quita su error cuando el usuario vuelve a editarlo.
   function handleChange(e) {
     const { name, value, type, checked } = e.target
     setValues((prev) => ({
@@ -41,6 +43,7 @@ export function useForm({ initialValues = {}, validate = () => ({}), onSubmit })
     }
   }
 
+  // Cambia manualmente un valor, útil para archivos y opciones personalizadas.
   function setValue(name, value) {
     setValues((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) {
@@ -48,6 +51,7 @@ export function useForm({ initialValues = {}, validate = () => ({}), onSubmit })
     }
   }
 
+  // Valida el formulario y, si no hay errores, ejecuta el envío.
   async function handleSubmit(e) {
     e.preventDefault()
     const nextErrors = validate(values)
@@ -61,7 +65,10 @@ export function useForm({ initialValues = {}, validate = () => ({}), onSubmit })
       await onSubmit(values)
       return { ok: true, values }
     } catch (err) {
-      const msg = err.message || 'Error inesperado'
+      // Muestra un mensaje legible si falla el envío.
+      const msg = getErrorMessage
+        ? getErrorMessage(err)
+        : err.message || 'Error inesperado'
       setErrors({ _form: msg })
       return { ok: false, errors: { _form: msg } }
     } finally {
@@ -69,6 +76,7 @@ export function useForm({ initialValues = {}, validate = () => ({}), onSubmit })
     }
   }
 
+  // Restaura los valores iniciales y limpia los errores.
   function reset(next = initialValues) {
     setValues(next)
     setErrors({})

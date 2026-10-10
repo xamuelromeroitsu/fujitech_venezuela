@@ -7,12 +7,7 @@ export const WHATSAPP_CONFIG = {
   phone: '414-3254458',
   countryCode: '58',
   businessName: 'Fujitec Venezuela',
-  statusText: 'En línea',
-  welcomeGreeting: 'Hola, ¿cómo estás? 👋',
-  welcomeText: '¿En qué podemos ayudarte?',
   typingDelay: 1500,
-  ctaText: 'Iniciar chat en WhatsApp',
-  defaultMessage: 'Hola, quiero información sobre sus servicios.',
 }
 
 export function buildWhatsAppLink(phone, countryCode, message) {

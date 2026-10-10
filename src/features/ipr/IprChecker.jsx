@@ -4,6 +4,7 @@ import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import { IconShieldCheck, IconAlertTriangle, IconClock } from '../../components/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './IprChecker.css'
 
 function diasRestantes(fecha) {
@@ -12,38 +13,40 @@ function diasRestantes(fecha) {
   return Math.ceil((target - hoy) / (1000 * 60 * 60 * 24))
 }
 
-function evaluar(dias) {
-  if (dias < 0) return { estado: 'rojo', icon: <IconAlertTriangle size={24} strokeWidth={2} color="var(--color-danger)" />, titulo: 'Inspección vencida', texto: 'Tu equipo tiene la IPR vencida. Solicita una inspección asistida lo antes posible.' }
-  if (dias <= 90) return { estado: 'amarillo', icon: <IconClock size={24} strokeWidth={2} color="var(--color-warning)" />, titulo: 'Próximo a vencer', texto: `La inspección vence en ${dias} días. Agenda la revisión con tiempo.` }
-  return { estado: 'verde', icon: <IconShieldCheck size={24} strokeWidth={2} color="var(--color-success)" />, titulo: 'Inspección al día', texto: `La IPR está vigente. Vence en ${dias} días.` }
+function evaluar(dias, t) {
+  if (dias < 0) return { estado: 'rojo', icon: <IconAlertTriangle size={24} strokeWidth={2} color="var(--color-danger)" />, titulo: t('ipr.expiredTitle'), texto: t('ipr.expiredText') }
+  if (dias <= 90) return { estado: 'amarillo', icon: <IconClock size={24} strokeWidth={2} color="var(--color-warning)" />, titulo: t('ipr.expiringTitle'), texto: t('ipr.expiringText', { days: dias }) }
+  return { estado: 'verde', icon: <IconShieldCheck size={24} strokeWidth={2} color="var(--color-success)" />, titulo: t('ipr.currentTitle'), texto: t('ipr.currentText', { days: dias }) }
 }
 
 export default function IprChecker() {
+  const { t } = useLanguage()
   const [rae, setRae] = useState('')
-  const [resultado, setResultado] = useState(null)
-  const [error, setError] = useState('')
+  const [diasResultado, setDiasResultado] = useState(null)
+  const [hasValidationError, setHasValidationError] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [requestError, setRequestError] = useState('')
+  const [hasRequestError, setHasRequestError] = useState(false)
+  const resultado = diasResultado === null ? null : evaluar(diasResultado, t)
 
   async function handleCheck(e) {
     e.preventDefault()
     const raeLimpio = rae.trim()
     if (raeLimpio.length < 4) {
-      setError('Ingresa un RAE válido (mínimo 4 caracteres)')
-      setResultado(null)
+      setHasValidationError(true)
+      setDiasResultado(null)
       return
     }
-    setError('')
-    setRequestError('')
-    setResultado(null)
+    setHasValidationError(false)
+    setHasRequestError(false)
+    setDiasResultado(null)
     // El skeleton representa el resultado mientras responde la escritura remota.
     setLoading(true)
     try {
       await insertRow('solicitudes_ipr', { rae: raeLimpio, estado: 'consultado' })
       const dias = diasRestantes(Date.now() + 45 * 24 * 60 * 60 * 1000)
-      setResultado(evaluar(dias))
+      setDiasResultado(dias)
     } catch {
-      setRequestError('No se pudo completar la consulta. Inténtalo de nuevo.')
+      setHasRequestError(true)
     } finally {
       // Garantiza que la espera termine tanto en exito como en error.
       setLoading(false)
@@ -54,18 +57,18 @@ export default function IprChecker() {
     <div className="ipr">
       <form className="ipr__form" onSubmit={handleCheck}>
         <Input
-          label="Número de Registro del Ascensor (RAE) o dirección del edificio"
+          label={t('ipr.label')}
           name="rae"
           value={rae}
-          onChange={(e) => { setRae(e.target.value); setError(''); setRequestError('') }}
-          error={error}
-          hint="Ej.: RAE-000123 o Av. Principal, Torre Central"
+          onChange={(e) => { setRae(e.target.value); setHasValidationError(false); setHasRequestError(false) }}
+          error={hasValidationError ? t('ipr.invalid') : ''}
+          hint={t('ipr.hint')}
           required
         />
-        {loading && <SkeletonCard label="Consultando estado IPR" />}
-        {requestError && <p className="field__error" role="alert">{requestError}</p>}
+        {loading && <SkeletonCard label={t('ipr.loading')} />}
+        {hasRequestError && <p className="field__error" role="alert">{t('ipr.requestError')}</p>}
         <Button type="submit" disabled={loading}>
-          {loading ? 'Consultando...' : 'Consultar estado'}
+          {loading ? t('ipr.checking') : t('ipr.submit')}
         </Button>
       </form>
 
@@ -76,16 +79,13 @@ export default function IprChecker() {
             <p className="ipr__titulo">{resultado.titulo}</p>
             <p className="ipr__texto">{resultado.texto}</p>
             <Button as="a" href="/cotizar" variant="outline" className="ipr__cta">
-              Solicitar inspección técnica asistida
+              {t('ipr.cta')}
             </Button>
           </div>
         </div>
       )}
 
-      <p className="ipr__nota">
-        Resultado orientativo basado en la Inspección Periódica Reglamentaria (IPR).
-        La confirmación oficial requiere verificación con los organismos competentes.
-      </p>
+      <p className="ipr__nota">{t('ipr.note')}</p>
     </div>
   )
 }

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { WHATSAPP_CONFIG, buildWhatsAppLink } from './whatsapp.config'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './WhatsAppWidget.css'
 
 export default function WhatsAppWidget() {
+  const { language, t } = useLanguage()
   const [visible, setVisible] = useState(false)
   const [closing, setClosing] = useState(false)
   const [typing, setTyping] = useState(true)
@@ -10,10 +12,13 @@ export default function WhatsAppWidget() {
   const link = buildWhatsAppLink(
     WHATSAPP_CONFIG.phone,
     WHATSAPP_CONFIG.countryCode,
-    WHATSAPP_CONFIG.defaultMessage,
+    t('whatsapp.defaultMessage'),
   )
 
-  const hora = new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' })
+  const hora = new Date().toLocaleTimeString(
+    t('language.locale'),
+    { hour: '2-digit', minute: '2-digit' },
+  )
 
   function toggle() {
     if (closing) return
@@ -49,7 +54,7 @@ export default function WhatsAppWidget() {
         <div
           className={`wa__panel ${closing ? 'wa__panel--closing' : ''}`}
           role="dialog"
-          aria-label={`Chat de ${WHATSAPP_CONFIG.businessName}`}
+          aria-label={t('whatsapp.dialogLabel', { businessName: WHATSAPP_CONFIG.businessName })}
           aria-hidden={closing}
         >
           <header className="wa__header">
@@ -58,14 +63,14 @@ export default function WhatsAppWidget() {
               <p className="wa__name">{WHATSAPP_CONFIG.businessName}</p>
               <p className="wa__status">
                 <span className="wa__dot" aria-hidden="true" />
-                {WHATSAPP_CONFIG.statusText}
+                {t('whatsapp.status')}
               </p>
             </div>
             <button
               type="button"
               className="wa__close"
               onClick={handleClose}
-              aria-label="Cerrar chat"
+              aria-label={t('whatsapp.closeChat')}
             >
               ✕
             </button>
@@ -73,7 +78,7 @@ export default function WhatsAppWidget() {
 
           <div className="wa__body">
             {typing ? (
-              <div className="wa__bubble wa__typing" aria-label="Escribiendo…">
+              <div className="wa__bubble wa__typing" aria-label={t('whatsapp.typing')}>
                 <span className="wa__typing-dot" />
                 <span className="wa__typing-dot" />
                 <span className="wa__typing-dot" />
@@ -81,14 +86,14 @@ export default function WhatsAppWidget() {
             ) : (
               <div className="wa__bubble">
                 <p className="wa__bubble-text">
-                  <strong>{WHATSAPP_CONFIG.welcomeGreeting}</strong>
+                  <strong>{t('whatsapp.welcomeGreeting')}</strong>
                   <br />
-                  {WHATSAPP_CONFIG.welcomeText}
+                  {t('whatsapp.welcomeText')}
                 </p>
                 <span className="wa__bubble-time">{hora}</span>
               </div>
             )}
-            <p className="wa__hint">Normalmente responde en minutos</p>
+            <p className="wa__hint">{t('whatsapp.responseHint')}</p>
           </div>
 
           <div className="wa__footer">
@@ -98,7 +103,7 @@ export default function WhatsAppWidget() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {WHATSAPP_CONFIG.ctaText}
+              {t('whatsapp.cta')}
             </a>
           </div>
         </div>
@@ -109,7 +114,7 @@ export default function WhatsAppWidget() {
         className={`wa__fab ${visible ? 'wa__fab--active' : ''}`}
         onClick={toggle}
         aria-expanded={visible}
-        aria-label={visible ? 'Cerrar chat de WhatsApp' : 'Abrir chat de WhatsApp'}
+        aria-label={visible ? t('whatsapp.closeWidget') : t('whatsapp.openWidget')}
       >
         <span className="wa__fab-icons">
           <svg

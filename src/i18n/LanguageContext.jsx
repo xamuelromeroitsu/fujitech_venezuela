@@ -39,7 +39,7 @@ export function LanguageProvider({ children }) {
     setLanguageState(nextLanguage)
   }
 
-  const t = (key) => {
+  const t = (key, values = {}) => {
     let value = translations[language]
 
     // Resuelve claves por secciones, por ejemplo "nav.home". Si falta una
@@ -48,7 +48,13 @@ export function LanguageProvider({ children }) {
       value = value?.[part]
     }
 
-    return typeof value === 'string' ? value : key
+    if (typeof value !== 'string') {
+      return key
+    }
+
+    return value.replace(/\{(\w+)\}/g, (placeholder, name) => (
+      Object.hasOwn(values, name) ? values[name] : placeholder
+    ))
   }
 
   return (

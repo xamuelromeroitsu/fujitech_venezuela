@@ -9,20 +9,30 @@ import FormSuccess from '../../components/form/FormSuccess'
 import ChipGroup from '../../components/form/ChipGroup'
 import PersonalDataFields from '../../components/form/PersonalDataFields'
 import FormError from '../../components/form/FormError'
+import { useLanguage } from '../../i18n/LanguageContext'
 import './CotizadorForm.css'
 
 const PASOS = [
-  { key: 'datos', label: 'Datos' },
-  { key: 'equipo', label: 'Equipo' },
-  { key: 'cobertura', label: 'Cobertura' },
+  { key: 'data', value: 'datos' },
+  { key: 'equipment', value: 'equipo' },
+  { key: 'coverage', value: 'cobertura' },
 ]
-
-const TIPOS_INMUEBLE = ['Residencial', 'Comercial', 'Industrial', 'Edificio de oficinas']
-const SERVICIOS = ['Mantenimiento', 'Modernización', 'Obra nueva', 'Salvaescaleras / Accesibilidad']
+const TIPOS_INMUEBLE = [
+  { value: 'Residencial', key: 'residential' },
+  { value: 'Comercial', key: 'commercial' },
+  { value: 'Industrial', key: 'industrial' },
+  { value: 'Edificio de oficinas', key: 'office' },
+]
+const SERVICIOS = [
+  { value: 'Mantenimiento', key: 'maintenance' },
+  { value: 'Modernización', key: 'modernization' },
+  { value: 'Obra nueva', key: 'newConstruction' },
+  { value: 'Salvaescaleras / Accesibilidad', key: 'accessibility' },
+]
 const COBERTURAS = [
-  { id: 'basica', label: 'Básica', text: 'Mano de obra programada y preventiva.' },
-  { id: 'repuestos', label: 'Con Repuestos', text: 'Incluye repuestos menores y mayores homologados.' },
-  { id: '24-7', label: 'Servicio 24/7', text: 'Atención de emergencias en cualquier hora.' },
+  { id: 'basica', key: 'basic' },
+  { id: 'repuestos', key: 'parts' },
+  { id: '24-7', key: 'emergency' },
 ]
 
 const INICIAL = {
@@ -37,23 +47,27 @@ const INICIAL = {
   mensaje: '',
 }
 
-function validate(values) {
+function validate(values, t) {
   const errors = {}
-  const n = rules.nombre(values.nombre); if (n) errors.nombre = n
-  const e = rules.email(values.email); if (e) errors.email = e
-  const t = rules.telefono(values.telefono); if (t) errors.telefono = t
-  const ed = rules.edificio(values.edificio); if (ed) errors.edificio = ed
-  const ti = rules.tipoInmueble(values.tipoInmueble); if (ti) errors.tipoInmueble = ti
-  if (values.paradas && Number(values.paradas) < 1) errors.paradas = 'Mínimo 1 parada'
+  const nameError = rules.nombre(values.nombre, t); if (nameError) errors.nombre = nameError
+  const emailError = rules.email(values.email, t); if (emailError) errors.email = emailError
+  const phoneError = rules.telefono(values.telefono, t); if (phoneError) errors.telefono = phoneError
+  const buildingError = rules.edificio(values.edificio, t); if (buildingError) errors.edificio = buildingError
+  const propertyTypeError = rules.tipoInmueble(values.tipoInmueble, t); if (propertyTypeError) errors.tipoInmueble = propertyTypeError
+  if (values.paradas && Number(values.paradas) < 1) errors.paradas = t('forms.validation.stops')
   return errors
 }
 
 export default function CotizadorForm() {
+  const { t } = useLanguage()
   const [paso, setPaso] = useState(0)
   const [enviado, setEnviado] = useState(false)
   const { values, errors, setErrors, handleChange, handleSubmit, isSubmitting, setValue } = useForm({
     initialValues: INICIAL,
-    validate,
+    validate: (formValues) => validate(formValues, t),
+    getErrorMessage: (error) => t('forms.validation.submit', {
+      details: error?.message || t('forms.validation.unexpected'),
+    }),
     onSubmit: async (v) => {
       await insertRow('leads', {
         nombre: v.nombre,
@@ -71,7 +85,7 @@ export default function CotizadorForm() {
   })
 
   async function handleNext() {
-    const errs = validate(values)
+    const errs = validate(values, t)
     const relevant = paso === 0
       ? ['nombre', 'email', 'telefono', 'edificio']
       : paso === 1 ? ['tipoInmueble', 'servicio', 'paradas'] : []
@@ -85,19 +99,19 @@ export default function CotizadorForm() {
     return (
       <FormSuccess
         nombre={values.nombre}
-        titulo="Solicitud recibida"
-        mensaje="Un asesor Fujitec te contactará en menos de 24 horas hábiles."
+        titulo={t('forms.quote.successTitle')}
+        mensaje={t('forms.quote.successMessage')}
       />
     )
   }
 
   return (
     <form className="cotizador" onSubmit={(e) => handleSubmit(e).then((r) => { if (r.ok) setEnviado(true) })}>
-      <ol className="cotizador__rail" aria-label="Pasos de cotización">
+      <ol className="cotizador__rail" aria-label={t('forms.quote.stepsLabel')}>
         {PASOS.map((p, i) => (
           <li key={p.key} className={`cotizador__step-marker ${i === paso ? 'cotizador__step-marker--active' : ''} ${i < paso ? 'cotizador__step-marker--done' : ''}`}>
             <span className="cotizador__step-number">{i + 1}</span>
-            <span className="cotizador__step-label">{p.label}</span>
+            <span className="cotizador__step-label">{t(`forms.quote.steps.${p.key}`)}</span>
           </li>
         ))}
       </ol>
@@ -105,16 +119,22 @@ export default function CotizadorForm() {
       {paso === 0 && (
         <div className="cotizador__step" data-reveal>
           <PersonalDataFields values={values} errors={errors} onChange={handleChange} />
-          <Input label="Nombre del edificio o comunidad" name="edificio" maxLength={50} value={values.edificio} onChange={handleChange} error={errors.edificio} />
+          <Input label={t('forms.quote.building')} name="edificio" maxLength={50} value={values.edificio} onChange={handleChange} error={errors.edificio} />
         </div>
       )}
 
       {paso === 1 && (
         <div className="cotizador__step">
-          <ChipGroup label="Tipo de inmueble" options={TIPOS_INMUEBLE} value={values.tipoInmueble} onChange={(v) => setValue('tipoInmueble', v)} error={errors.tipoInmueble} />
-          <ChipGroup label="Servicio que necesitas" options={SERVICIOS} value={values.servicio} onChange={(v) => setValue('servicio', v)} />
+          <ChipGroup label={t('forms.quote.propertyType')} options={TIPOS_INMUEBLE.map((option) => ({
+            value: option.value,
+            label: t(`forms.quote.propertyTypes.${option.key}`),
+          }))} value={values.tipoInmueble} onChange={(v) => setValue('tipoInmueble', v)} error={errors.tipoInmueble} />
+          <ChipGroup label={t('forms.quote.service')} options={SERVICIOS.map((option) => ({
+            value: option.value,
+            label: t(`forms.quote.services.${option.key}`),
+          }))} value={values.servicio} onChange={(v) => setValue('servicio', v)} />
           <Input
-            label="Número de paradas / pisos"
+            label={t('forms.quote.stops')}
             name="paradas"
             type="number"
             min="1"
@@ -129,8 +149,8 @@ export default function CotizadorForm() {
 
       {paso === 2 && (
         <div className="cotizador__step">
-          <fieldset className="cotizador__coberturas" aria-label="Nivel de cobertura">
-            <legend className="visually-hidden">Selecciona nivel de cobertura</legend>
+          <fieldset className="cotizador__coberturas" aria-label={t('forms.quote.coverageLabel')}>
+            <legend className="visually-hidden">{t('forms.quote.selectCoverage')}</legend>
             {COBERTURAS.map((c) => (
               <label key={c.id} className={`cotizador__cobertura ${values.cobertura === c.id ? 'cotizador__cobertura--active' : ''}`}>
                 <input
@@ -142,19 +162,19 @@ export default function CotizadorForm() {
                   className="visually-hidden"
                 />
                 <div className="cotizador__cobertura-content">
-                  <strong className="cotizador__cobertura-label">{c.label}</strong>
-                  <span className="cotizador__cobertura-text">{c.text}</span>
+                  <strong className="cotizador__cobertura-label">{t(`forms.quote.coverages.${c.key}.label`)}</strong>
+                  <span className="cotizador__cobertura-text">{t(`forms.quote.coverages.${c.key}.text`)}</span>
                 </div>
               </label>
             ))}
           </fieldset>
           <Input
-            label="Cuéntanos más (opcional)"
+            label={t('forms.quote.message')}
             name="mensaje"
             type="textarea"
             value={values.mensaje}
             onChange={handleChange}
-            hint="Ej.: cuántos ascensores tiene el edificio, antigüedad, marca actual..."
+            hint={t('forms.quote.messageHint')}
           />
           <FormError error={errors._form} />
         </div>
@@ -162,15 +182,15 @@ export default function CotizadorForm() {
 
       <div className="cotizador__nav">
         {paso < PASOS.length - 1 ? (
-          <Button type="button" onClick={handleNext}>Continuar →</Button>
+          <Button type="button" onClick={handleNext}>{t('forms.quote.continue')}</Button>
         ) : (
           <Button type="submit" disabled={isSubmitting} size="lg">
-            {isSubmitting ? 'Enviando solicitud...' : 'Solicitar propuesta'}
+            {isSubmitting ? t('forms.quote.submitting') : t('forms.quote.submit')}
           </Button>
         )}
       </div>
       {/* Se conserva el formulario visible y se indica la espera sin permitir otro envio. */}
-      {isSubmitting && <SkeletonCard compact label="Enviando solicitud de cotización" />}
+      {isSubmitting && <SkeletonCard compact label={t('forms.quote.loading')} />}
     </form>
   )
 }
